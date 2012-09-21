@@ -26,9 +26,9 @@ if ! which svn ; then PACKAGES+=' subversion'; fi > /dev/null
 if ! which cobertura-instrument ; then PACKAGES+=' cobertura'; fi > /dev/null
 if [ -n "$PACKAGES" ]; then
 	echo 'Updating repositories and packages...'
-	sudo apt-get update > /dev/null && yes | sudo apt-get upgrade > /dev/null
+	sudo apt-get update > /dev/null && sudo apt-get -y upgrade > /dev/null
 	echo "Installing new packages: $PACKAGES"
-	yes | sudo apt-get install $PACKAGES
+	sudo apt-get -y install $PACKAGES
 fi
 echo
 ## END CHECKING FOR REQUIRED SOFTWARE
