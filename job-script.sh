@@ -38,8 +38,6 @@ if [ ! -d "$PWD/trunk" ]; then
 	svn co https://guitar.svn.sourceforge.net/svnroot/guitar/trunk@3320
 fi
 
-exit 0
-
 echo 'Building project'
 if [ -d "$BUILD_PATH" ]; then
         echo 'Project already built. Skipping invocation to ant'
