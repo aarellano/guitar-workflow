@@ -29,15 +29,16 @@ XFVB=true
 AUTO_RUN=true
 while getopts ":h :x :m" opt; do
   case $opt in
-    h)
-      usage
-      ;;
-    x)
+	h)
+		usage
+		;;
+	x)
 		XVFB=false
 		;;
 	m)
 		AUTO_RUN=false
-    \?)
+		;;
+	\?)
       echo "Invalid option: -$OPTARG" >&2
       ;;
   esac
@@ -103,10 +104,10 @@ echo
 ## END INSTRUMENTING CLASSES
 
 echo 'Running tests'
-if [ $AUTO_RUN ]; then
+if $AUTO_RUN; then
 	. ./jfc-sample-workflow.sh
 else
-	if [ $XVFB ]; then
+	if $XVFB; then
 		xvfb -a java -cp $JFC_DIST_PATH/jars/cobertura-1.9.4.1/cobertura.jar:$INSTRUMENTED_CLASSES:$AUT_CLASSES -Dnet.sourceforge.datafile=cobertura.ser Project
 	else
 		java -cp $JFC_DIST_PATH/jars/cobertura-1.9.4.1/cobertura.jar:$INSTRUMENTED_CLASSES:$AUT_CLASSES -Dnet.sourceforge.datafile=cobertura.ser Project
