@@ -22,11 +22,13 @@ usage()
 		-x 	by default this script uses xvfb to perform all graphical operations in memory.
 			If -x is specified, then the graphics will be shown on a standard X11 server
 		-m 	if this flag is set, then the software will run manually (no automated test cases).
+		-n	setting this flag, no tests will be run
 		"
 }
 
 XFVB=true
 AUTO_RUN=true
+RUN_TESTS=true
 while getopts ":h :x :m" opt; do
   case $opt in
 	h)
@@ -38,13 +40,14 @@ while getopts ":h :x :m" opt; do
 	m)
 		AUTO_RUN=false
 		;;
+	n)
+		RUN_TESTS=false
+		;;
 	\?)
       echo "Invalid option: -$OPTARG" >&2
       ;;
   esac
 done
-
-exit 0
 
 echo 'Checking for administrative privileges'
 if ! groups | grep 'root\|admin\|sudo' > /dev/null ; then
@@ -104,13 +107,15 @@ echo
 ## END INSTRUMENTING CLASSES
 
 echo 'Running tests'
-if $AUTO_RUN; then
-	. ./jfc-sample-workflow.sh
-else
-	if $XVFB; then
-		xvfb -a java -cp $JFC_DIST_PATH/jars/cobertura-1.9.4.1/cobertura.jar:$INSTRUMENTED_CLASSES:$AUT_CLASSES -Dnet.sourceforge.datafile=cobertura.ser Project
+if $RUN_TESTS; then
+	if $AUTO_RUN; then
+		. ./jfc-sample-workflow.sh
 	else
-		java -cp $JFC_DIST_PATH/jars/cobertura-1.9.4.1/cobertura.jar:$INSTRUMENTED_CLASSES:$AUT_CLASSES -Dnet.sourceforge.datafile=cobertura.ser Project
+		if $XVFB; then
+			xvfb -a java -cp $JFC_DIST_PATH/jars/cobertura-1.9.4.1/cobertura.jar:$INSTRUMENTED_CLASSES:$AUT_CLASSES -Dnet.sourceforge.datafile=cobertura.ser Project
+		else
+			java -cp $JFC_DIST_PATH/jars/cobertura-1.9.4.1/cobertura.jar:$INSTRUMENTED_CLASSES:$AUT_CLASSES -Dnet.sourceforge.datafile=cobertura.ser Project
+		fi
 	fi
 fi
 
