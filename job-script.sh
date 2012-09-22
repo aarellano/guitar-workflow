@@ -6,7 +6,7 @@ BUILD_FILE=$PWD/trunk/build.xml
 AUT_CLASSES=$PWD/trunk/dist/guitar/jfc-aut/RadioButton/bin
 INSTRUMENTED_CLASSES=$PWD/trunk/dist/guitar/jfc-aut/RadioButton/instrumented-classes
 JFC_DIST_PATH=$PWD/trunk/dist/guitar
-REPORTS_PATH=$PWD/cobertura-reports/html
+REPORTS_PATH=$PWD/cobertura-reports
 
 usage()
 {
@@ -132,7 +132,8 @@ echo
 
 echo 'Creating cobertura reports'
 rm -rf $REPORT_PATH"/*"
-cobertura-report --basedir $AUT_CLASSES --destination $REPORTS_PATH
+cobertura-report --basedir $AUT_CLASSES --format html --destination $REPORTS_PATH/html
+cobertura-report --basedir $AUT_CLASSES --format xml --destination $REPORTS_PATH/xml
 
 echo
 ## END CREATING COBERTURA REPORTS
