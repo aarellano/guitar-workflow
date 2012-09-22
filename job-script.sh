@@ -97,6 +97,20 @@ fi
 echo
 ## END BUILDING PROJECT
 
+echo 'Updating scripts to run cobertura'
+
+echo 'Removing jfc-sample-workflow.sh'
+rm -f $JFC_DIST_PATH/jfc-sample-workflow.sh
+echo 'Removing jfc-replayer.sh'
+rm -f $JFC_DIST_PATH/jfc-replayer.sh
+echo 'Copying new jfc-sample-workflow.sh'
+cp jfc-sample-workflow.sh $JFC_DIST_PATH
+echo 'Copying new jfc-replayer.sh'
+cp jfc-replayer.sh $JFC_DIST_PATH
+
+echo
+## END REPLACING SCRIPTS
+
 echo 'Instrumenting classes'
 if [ ! -d "$INSTRUMENTED_CLASSES" ]; then
         mkdir -p $INSTRUMENTED_CLASSES
