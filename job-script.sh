@@ -23,6 +23,7 @@ echo 'Checking for required software'
 if ! which java ; then PACKAGES+=' openjdk-6-jdk'; fi > /dev/null
 if ! which ant ; then PACKAGES+=' ant'; fi > /dev/null
 if ! which svn ; then PACKAGES+=' subversion'; fi > /dev/null
+if ! which xvfb-run ; then PACKAGES+=' xvfb'; fi > /dev/null
 if ! which cobertura-instrument ; then PACKAGES+=' cobertura'; fi > /dev/null
 if [ -n "$PACKAGES" ]; then
 	echo 'Updating repositories and packages...'
