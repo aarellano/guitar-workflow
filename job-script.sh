@@ -22,6 +22,8 @@ usage()
 		-h 	shows this message
 		-x 	by default this script uses xvfb to perform all graphical operations in memory.
 			If -x is specified, then the graphics will be shown on a standard X11 server
+		-c  Maximum number of test cases to write and replay be run. If 0 all the test cases are run.
+			By default is 1
 		-m 	if this flag is set, then the software will run manually (no automated test cases).
 		-n	setting this flag, no tests will be run
 		"
@@ -30,7 +32,7 @@ usage()
 XFVB=true
 AUTO_RUN=true
 RUN_TESTS=true
-while getopts ":h :x :m :n" opt; do
+while getopts ":h :x :m :c: :n" opt; do
   case $opt in
 	h)
 		usage
@@ -38,6 +40,8 @@ while getopts ":h :x :m :n" opt; do
 	x)
 		XVFB=false
 		;;
+	c)
+		MAX_NUM_TESTCASES=$OPTARG
 	m)
 		AUTO_RUN=false
 		;;
