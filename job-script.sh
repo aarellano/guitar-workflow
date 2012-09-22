@@ -108,9 +108,9 @@ rm -f $JFC_DIST_PATH/jfc-sample-workflow.sh
 echo 'Removing jfc-replayer.sh'
 rm -f $JFC_DIST_PATH/jfc-replayer.sh
 echo 'Copying new jfc-sample-workflow.sh'
-cp jfc-sample-workflow.sh $JFC_DIST_PATH
+cp modified-scripts/jfc-sample-workflow.sh $JFC_DIST_PATH
 echo 'Copying new jfc-replayer.sh'
-cp jfc-replayer.sh $JFC_DIST_PATH
+cp modified-scripts/jfc-replayer.sh $JFC_DIST_PATH
 
 echo
 ## END REPLACING SCRIPTS
