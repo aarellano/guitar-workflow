@@ -112,7 +112,7 @@ if $RUN_TESTS; then
 		. ./jfc-sample-workflow.sh
 	else
 		if $XVFB; then
-			xvfb -a java -cp $JFC_DIST_PATH/jars/cobertura-1.9.4.1/cobertura.jar:$INSTRUMENTED_CLASSES:$AUT_CLASSES -Dnet.sourceforge.datafile=cobertura.ser Project
+			xvfb-run -a java -cp $JFC_DIST_PATH/jars/cobertura-1.9.4.1/cobertura.jar:$INSTRUMENTED_CLASSES:$AUT_CLASSES -Dnet.sourceforge.datafile=cobertura.ser Project
 		else
 			java -cp $JFC_DIST_PATH/jars/cobertura-1.9.4.1/cobertura.jar:$INSTRUMENTED_CLASSES:$AUT_CLASSES -Dnet.sourceforge.datafile=cobertura.ser Project
 		fi
