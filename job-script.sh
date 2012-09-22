@@ -29,7 +29,7 @@ usage()
 XFVB=true
 AUTO_RUN=true
 RUN_TESTS=true
-while getopts ":h :x :m" opt; do
+while getopts ":h :x :m :n" opt; do
   case $opt in
 	h)
 		usage
