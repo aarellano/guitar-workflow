@@ -3,7 +3,8 @@
 
 BUILD_PATH=$PWD/trunk/dist
 BUILD_FILE=$PWD/trunk/build.xml
-AUT_CLASSES=$PWD/trunk/dist/guitar/jfc-aut/RadioButton/bin
+AUT_PATH=$PWD/trunk/dist/guitar/jfc-aut/RadioButton
+AUT_CLASSES=$AUT_PATH/bin
 INSTRUMENTED_CLASSES=$PWD/trunk/dist/guitar/jfc-aut/RadioButton/instrumented-classes
 JFC_DIST_PATH=$PWD/trunk/dist/guitar
 REPORTS_PATH=$PWD/cobertura-reports
@@ -89,7 +90,8 @@ else
         echo 'Updating cobertura.jar'
         wget http://sourceforge.net/projects/cobertura/files/cobertura/1.9.4.1/cobertura-1.9.4.1-bin.tar.gz
         tar -C $JFC_DIST_PATH/jars -xzf cobertura-1.9.4.1-bin.tar.gz
-        rm cobertura-1.9.4.1-bin.tar.gz
+        rm -f cobertura-1.9.4.1-bin.tar.gz
+	rm -f $JFC_DIST_PATH/jars/cobertura.jar
 fi
 
 echo
@@ -109,7 +111,7 @@ echo
 echo 'Running tests'
 if $RUN_TESTS; then
 	if $AUTO_RUN; then
-		. ./jfc-sample-workflow.sh
+		. $JFC_DIST_PATH/jfc-sample-workflow.sh
 	else
 		if $XVFB; then
 			xvfb-run -a java -cp $JFC_DIST_PATH/jars/cobertura-1.9.4.1/cobertura.jar:$INSTRUMENTED_CLASSES:$AUT_CLASSES -Dnet.sourceforge.cobertura.datafile=cobertura.ser Project
