@@ -43,6 +43,7 @@ while getopts ":h :x :m :c: :n" opt; do
 		;;
 	c)
 		MAX_NUM_TESTCASES=$OPTARG
+		;;
 	m)
 		AUTO_RUN=false
 		;;
