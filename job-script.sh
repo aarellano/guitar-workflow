@@ -1,5 +1,5 @@
 #!/bin/bash
-# This script runs a simple sample workflow on using GUITAR
+# This script enables and runs a simple sample example workflow on using GUITAR
 
 BUILD_PATH=$PWD/trunk/dist
 BUILD_FILE=$PWD/trunk/build.xml
@@ -8,6 +8,42 @@ INSTRUMENTED_CLASSES=$PWD/trunk/dist/guitar/jfc-aut/RadioButton/instrumented-cla
 JFC_DIST_PATH=$PWD/trunk/dist/guitar
 REPORTS_PATH=$PWD/cobertura-reports/html
 
+usage()
+{
+	echo "
+	USAGE
+	$0 [options]
+
+	DESCRIPTION
+	This script enables and runs a simple example workflow on using GUITAR
+
+	OPTIONS
+		-h 	shows this message
+		-x 	by default this script uses xvfb to perform all graphical operations in memory.
+			If -x is specified, then the graphics will be shown on a standard X11 server
+		-m 	if this flag is set, then the software will run manually (no automated test cases).
+		"
+}
+
+XFVB=true
+AUTO_RUN=true
+while getopts ":h :x :m" opt; do
+  case $opt in
+    h)
+      usage
+      ;;
+    x)
+		XVFB=false
+		;;
+	m)
+		AUTO_RUN=false
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      ;;
+  esac
+done
+
+exit 0
 
 echo 'Checking for administrative privileges'
 if ! groups | grep 'root\|admin\|sudo' > /dev/null ; then
@@ -81,8 +117,15 @@ echo
 ## END INSTRUMENTING CLASSES
 
 echo 'Running tests'
-#$JFC_DIST_PATH/jfc-sample-workflow.sh
-java -cp $JFC_DIST_PATH/jars/cobertura-1.9.4.1/cobertura.jar:$INSTRUMENTED_CLASSES:$TEST_CLASSES -Dnet.sourceforge.datafile=cobertura.ser Project
+if [ $AUTO_RUN ]; then
+	. $JFC_DIST_PATH/jfc-sample-workflow.sh
+else
+	if [ $XVFB ]; then
+		xvfb -a java -cp $JFC_DIST_PATH/jars/cobertura-1.9.4.1/cobertura.jar:$INSTRUMENTED_CLASSES:$TEST_CLASSES -Dnet.sourceforge.datafile=cobertura.ser Project
+	else
+		java -cp $JFC_DIST_PATH/jars/cobertura-1.9.4.1/cobertura.jar:$INSTRUMENTED_CLASSES:$TEST_CLASSES -Dnet.sourceforge.datafile=cobertura.ser Project
+	fi
+fi
 
 echo
 ## END RUNNING TESTS
