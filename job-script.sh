@@ -100,6 +100,7 @@ if [ ! -d "$INSTRUMENTED_CLASSES" ]; then
         mkdir -p $INSTRUMENTED_CLASSES
 fi
 rm -rf $INSTRUMENTED_CLASSES"/*"
+rm cobertura.ser
 cobertura-instrument --destination $INSTRUMENTED_CLASSES $AUT_CLASSES
 
 echo
