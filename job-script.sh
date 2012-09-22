@@ -3,7 +3,7 @@
 
 BUILD_PATH=$PWD/trunk/dist
 BUILD_FILE=$PWD/trunk/build.xml
-TEST_CLASSES=$PWD/trunk/dist/guitar/jfc-aut/RadioButton/bin
+AUT_CLASSES=$PWD/trunk/dist/guitar/jfc-aut/RadioButton/bin
 INSTRUMENTED_CLASSES=$PWD/trunk/dist/guitar/jfc-aut/RadioButton/instrumented-classes
 JFC_DIST_PATH=$PWD/trunk/dist/guitar
 REPORTS_PATH=$PWD/cobertura-reports/html
@@ -111,7 +111,7 @@ if [ ! -d "$INSTRUMENTED_CLASSES" ]; then
 fi
 rm -rf $INSTRUMENTED_CLASSES"/*"
 rm $JFC_DIST_PATH"/cobertura.ser"
-cobertura-instrument --destination $INSTRUMENTED_CLASSES $TEST_CLASSES --datafile $JFC_DIST_PATH"/cobertura.ser"
+cobertura-instrument --destination $INSTRUMENTED_CLASSES $AUT_CLASSES --datafile $JFC_DIST_PATH"/cobertura.ser"
 
 echo
 ## END INSTRUMENTING CLASSES
@@ -121,9 +121,9 @@ if [ $AUTO_RUN ]; then
 	. $JFC_DIST_PATH/jfc-sample-workflow.sh
 else
 	if [ $XVFB ]; then
-		xvfb -a java -cp $JFC_DIST_PATH/jars/cobertura-1.9.4.1/cobertura.jar:$INSTRUMENTED_CLASSES:$TEST_CLASSES -Dnet.sourceforge.datafile=cobertura.ser Project
+		xvfb -a java -cp $JFC_DIST_PATH/jars/cobertura-1.9.4.1/cobertura.jar:$INSTRUMENTED_CLASSES:$AUT_CLASSES -Dnet.sourceforge.datafile=cobertura.ser Project
 	else
-		java -cp $JFC_DIST_PATH/jars/cobertura-1.9.4.1/cobertura.jar:$INSTRUMENTED_CLASSES:$TEST_CLASSES -Dnet.sourceforge.datafile=cobertura.ser Project
+		java -cp $JFC_DIST_PATH/jars/cobertura-1.9.4.1/cobertura.jar:$INSTRUMENTED_CLASSES:$AUT_CLASSES -Dnet.sourceforge.datafile=cobertura.ser Project
 	fi
 fi
 
@@ -132,7 +132,7 @@ echo
 
 echo 'Creating cobertura reports'
 rm -rf $REPORT_PATH"/*"
-cobertura-report --basedir $TEST_CLASSES --destination $REPORTS_PATH
+cobertura-report --basedir $AUT_CLASSES --destination $REPORTS_PATH
 
 echo
 ## END CREATING COBERTURA REPORTS
