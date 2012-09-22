@@ -30,6 +30,7 @@ usage()
 }
 
 XFVB=true
+MAX_NUM_TESTCASES=1
 AUTO_RUN=true
 RUN_TESTS=true
 while getopts ":h :x :m :c: :n" opt; do

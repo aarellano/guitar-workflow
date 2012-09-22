@@ -38,7 +38,7 @@ ripper_delay=500
 tc_length=3
 
 # the maximum number of test case generated (0 means generate all)
-tc_no=10
+tc_no=$MAX_NUM_TESTCASES
 
 # delay time between two events during replaying
 # this number is generally smaller than the $ripper_delay
