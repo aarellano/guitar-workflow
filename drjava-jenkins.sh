@@ -72,5 +72,5 @@ fi
 
 echo 'Checking out DrJava'
 if [ ! -d "$PWD/drjava" ]; then
-	svn co https://drjava.svn.sourceforge.net/svnroot/drjava drjava
+	svn co https://drjava.svn.sourceforge.net/svnroot/drjava/trunk/drjava
 fi
