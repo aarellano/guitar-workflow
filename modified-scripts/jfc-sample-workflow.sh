@@ -148,6 +148,13 @@ do
 	fi
 	echo $cmd
 	eval $cmd
+
+	echo 'Creating cobertura reports'
+	cobertura-report --basedir $AUT_CLASSES --format html --destination $REPORTS_PATH/$test_name/html
+	cobertura-report --basedir $AUT_CLASSES --format xml --destination $REPORTS_PATH/$test_name/xml
+	echo
+	## END CREATING COBERTURA REPORTS
+
 done
 
 echo "Output directory:  $output_dir"

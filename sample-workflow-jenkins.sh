@@ -137,6 +137,9 @@ echo
 echo 'Running tests'
 if $RUN_TESTS; then
 	if $AUTO_RUN; then
+		# First we clean the reports directory
+		rm -rf $REPORT_PATH"/*"
+
 		. $JFC_DIST_PATH/jfc-sample-workflow.sh
 	else
 		if $XVFB; then
@@ -149,11 +152,3 @@ fi
 
 echo
 ## END RUNNING TESTS
-
-echo 'Creating cobertura reports'
-rm -rf $REPORT_PATH"/*"
-cobertura-report --basedir $AUT_CLASSES --format html --destination $REPORTS_PATH/html
-cobertura-report --basedir $AUT_CLASSES --format xml --destination $REPORTS_PATH/xml
-
-echo
-## END CREATING COBERTURA REPORTS
