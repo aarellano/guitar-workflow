@@ -139,7 +139,7 @@ echo 'Running tests'
 if $RUN_TESTS; then
 	if $AUTO_RUN; then
 		# First we clean the reports directory
-		rm -rf $REPORT_PATH"/*"
+		rm -rf $REPORTS_PATH"/*"
 
 		. $JFC_DIST_PATH/jfc-sample-workflow.sh
 	else
