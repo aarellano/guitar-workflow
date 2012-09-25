@@ -85,46 +85,46 @@ mkdir -p $states_dir
 mkdir -p $logs_dir
 
 # Ripping
-echo ""
-echo "About to rip the application "
-#read -p "Press ENTER to continue..."
-cmd="$JFC_DIST_PATH/jfc-ripper.sh -cp $aut_classpath -c $mainclass -g  $gui_file -cf $configuration -d $ripper_delay -i $intial_wait -l $log_file"
+if ! $SKIP_RIPPING; then
+	echo ""
+	echo "About to rip the application "
+	#read -p "Press ENTER to continue..."
+	cmd="$JFC_DIST_PATH/jfc-ripper.sh -cp $aut_classpath -c $mainclass -g  $gui_file -cf $configuration -d $ripper_delay -i $intial_wait -l $log_file"
 
-# Adding application arguments if needed
-if [ ! -z $args ]
-then
-	cmd="$cmd -a \"$args\""
+	# Adding application arguments if needed
+	if [ ! -z $args ]
+	then
+		cmd="$cmd -a \"$args\""
+	fi
+	echo $cmd
+	eval $cmd
+
+	# Converting GUI structure to EFG
+	echo ""
+	echo "About to convert GUI structure file to Event Flow Graph (EFG) file"
+	#read -p "Press ENTER to continue..."
+	cmd="$JFC_DIST_PATH/gui2efg.sh -g $gui_file -e $efg_file"
+	echo $cmd
+	eval $cmd
+
+	# Generating test cases
+
+	echo ""
+	echo "About to generate test cases to cover $tc_no $tc_length-way event interactions"
+	#read -p "Press ENTER to continue..."
+
+	# -l: Interaction length
+	# -m: Number of test cases to generate, 0 for all possibile test cases.
+	cmd="$JFC_DIST_PATH/tc-gen-random.sh -e $efg_file -l $tc_length -m $tc_no -d $testcases_dir"
+
+
+
+	# Replace tc-gen-random.sh by tc-gen-sq.sh to systematically cover the interactions.
+	#cmd="$JFC_DIST_PATH/tc-gen-sq.sh -e $efg_file -l $tc_length -m 0 -d $testcases_dir"
+
+	echo $cmd
+	eval $cmd
 fi
-echo $cmd
-eval $cmd
-
-
-
-# Converting GUI structure to EFG
-echo ""
-echo "About to convert GUI structure file to Event Flow Graph (EFG) file"
-#read -p "Press ENTER to continue..."
-cmd="$JFC_DIST_PATH/gui2efg.sh -g $gui_file -e $efg_file"
-echo $cmd
-eval $cmd
-
-# Generating test cases
-
-echo ""
-echo "About to generate test cases to cover $tc_no $tc_length-way event interactions"
-#read -p "Press ENTER to continue..."
-
-# -l: Interaction length
-# -m: Number of test cases to generate, 0 for all possibile test cases.
-cmd="$JFC_DIST_PATH/tc-gen-random.sh -e $efg_file -l $tc_length -m $tc_no -d $testcases_dir"
-
-
-
-# Replace tc-gen-random.sh by tc-gen-sq.sh to systematically cover the interactions.
-#cmd="$JFC_DIST_PATH/tc-gen-sq.sh -e $efg_file -l $tc_length -m 0 -d $testcases_dir"
-
-echo $cmd
-eval $cmd
 
 # Replaying generated test cases
 echo ""

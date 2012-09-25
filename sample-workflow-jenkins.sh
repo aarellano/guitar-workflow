@@ -23,17 +23,19 @@ usage()
 		-x	by default this script uses xvfb to perform all graphical operations in memory.
 			If -x is specified, then the graphics will be shown on a standard X11 server
 		-c	Maximum number of test cases to write and replay. If 0 all the test cases are run.
-			By default is only 1
+			By default is only 2
 		-m	if this flag is set, then the software will run manually (no automated test cases).
-		-n	setting this flag, no tests will be run
+		-r	skip ripping the application.
+		-n	setting this flag, no tests will be run.
 		"
 }
 
 XFVB=true
-MAX_NUM_TESTCASES=1
+MAX_NUM_TESTCASES=2
 AUTO_RUN=true
+SKIP_RIPPING=false
 RUN_TESTS=true
-while getopts ":h :x :m :c: :n" opt; do
+while getopts ":h :x :m :c: :r :n" opt; do
   case $opt in
 	h)
 		usage
@@ -41,19 +43,18 @@ while getopts ":h :x :m :c: :n" opt; do
 		;;
 	x)
 		XVFB=false
-		exit 0
 		;;
 	c)
 		MAX_NUM_TESTCASES=$OPTARG
-		exit 0
 		;;
 	m)
 		AUTO_RUN=false
-		exit 0
+		;;
+	r)
+		SKIP_RIPPING=true
 		;;
 	n)
 		RUN_TESTS=false
-		exit 0
 		;;
 	\?)
       echo "Invalid option: -$OPTARG" >&2
