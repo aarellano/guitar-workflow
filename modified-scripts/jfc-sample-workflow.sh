@@ -135,6 +135,9 @@ testcase_num=$tc_no
 
 for testcase in `find $testcases_dir -name "*.tst"| sort -R| head -n$testcase_num`
 do
+	# getting the original cobertura.ser
+	cp cobertura.ser.bkp cobertura.ser
+
 	# getting test name
 	test_name=`basename $testcase`
 	test_name=${test_name%.*}
