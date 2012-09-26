@@ -78,13 +78,13 @@ if ! which java ; then PACKAGES+=' openjdk-6-jdk'; fi > /dev/null
 if ! which ant ; then PACKAGES+=' ant'; fi > /dev/null
 if ! which svn ; then PACKAGES+=' subversion'; fi > /dev/null
 if ! which xvfb-run ; then PACKAGES+=' xvfb'; fi > /dev/null
+if perl -e 'use XML::Simple;' 2>&1 | grep -q "Can't locate XML"; then PACKAGES+=' libxml-simple-perl'; fi
 if ! which cobertura-instrument ; then PACKAGES+=' cobertura'; fi > /dev/null
 if [ -n "$PACKAGES" ]; then
 	echo 'Updating repositories and packages...'
 	sudo apt-get update > /dev/null && sudo apt-get -y upgrade > /dev/null
 	echo "Installing new packages: $PACKAGES"
 	sudo apt-get -y install $PACKAGES
-	sudo apt-get -y install libxml-simple-perl
 fi
 echo
 ## END CHECKING FOR REQUIRED SOFTWARE
