@@ -153,7 +153,7 @@ if $RUN_TESTS; then
 	fi
 fi
 
-perl ./matrix.perl
+perl ./matrix-gen.perl
 
 echo
 ## END RUNNING TESTS
