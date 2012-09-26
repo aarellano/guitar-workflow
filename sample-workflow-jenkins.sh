@@ -64,7 +64,7 @@ while getopts ":h :x :m :c: :r :n" opt; do
 done
 
 echo 'Checking for administrative privileges'
-if ! groups | grep 'root\|admin\|sudo|cluster' > /dev/null ; then
+if ! groups | grep 'root\|admin\|sudo\|cluster' > /dev/null ; then
 	echo 'You need to run this script as root, or better yet, using passwordless sudo'
 	exit 1
 else
