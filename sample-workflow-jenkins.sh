@@ -161,4 +161,6 @@ fi
 perl ./matrix-gen.perl
 
 echo
+echo LINK TO THE HTML MATRIX: 'file://'$PWD'/matrix.html'
+echo
 ## END RUNNING TESTS
