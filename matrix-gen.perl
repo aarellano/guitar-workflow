@@ -1,11 +1,13 @@
 #!/usr/bin/perl
 
 use XML::Simple;
+use File::Basename;
 
+my $SCRIPT_PATH = SCRIPT_PATH(__FILE__);
 my $simple = XML::Simple->new (ForceArray => 1, KeepRoot => 1);
 
-$COBERTURA_REPORTS='/var/lib/jenkins/workspace/guitar-sample_workflow/cobertura-reports/';
-$MATRIX_FILE='/var/lib/jenkins/workspace/guitar-sample_workflow/matrix.html';
+$COBERTURA_REPORTS=$SCRIPT_PATH . '/cobertura-reports/';
+$MATRIX_FILE=$SCRIPT_PATH . '/matrix.html';
 $table = '<table border="1">';
 
 opendir(my $dh, $COBERTURA_REPORTS) || die;
