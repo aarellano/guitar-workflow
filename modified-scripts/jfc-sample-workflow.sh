@@ -136,6 +136,7 @@ testcase_num=$tc_no
 for testcase in `find $testcases_dir -name "*.tst"| sort -R| head -n$testcase_num`
 do
 	# getting the original cobertura.ser
+	rm cobertura.ser
 	cp cobertura.ser.bkp cobertura.ser
 
 	# getting test name
@@ -153,8 +154,8 @@ do
 	eval $cmd
 
 	echo 'Creating cobertura reports'
-	cobertura-report --basedir $AUT_CLASSES --format html --destination $REPORTS_PATH/$test_name/html
-	cobertura-report --basedir $AUT_CLASSES --format xml --destination $REPORTS_PATH/$test_name/xml
+	cobertura-report --basedir $AUT_CLASSES --format xml --destination $REPORTS_PATH
+	mv $REPORTS_PATH/coverage.xml $REPORTS_PATH/$test_name.xml
 	echo
 	## END CREATING COBERTURA REPORTS
 
