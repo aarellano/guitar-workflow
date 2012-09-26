@@ -84,6 +84,7 @@ if [ -n "$PACKAGES" ]; then
 	sudo apt-get update > /dev/null && sudo apt-get -y upgrade > /dev/null
 	echo "Installing new packages: $PACKAGES"
 	sudo apt-get -y install $PACKAGES
+	sudo apt-get -y install libxml-simple-perl
 fi
 echo
 ## END CHECKING FOR REQUIRED SOFTWARE
