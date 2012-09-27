@@ -161,7 +161,7 @@ fi
 perl ./matrix-gen.perl
 
 echo
-echo LINK TO THE HTML MATRIX: file://$PWD/matrix.html
+echo LINK TO THE HTML MATRIX: file://$PWD/reports/html/matrix.html
 echo
 echo "
      /\    _

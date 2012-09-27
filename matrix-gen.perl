@@ -7,7 +7,7 @@ my $SCRIPT_PATH = dirname(__FILE__);
 my $simple = XML::Simple->new (ForceArray => 1, KeepRoot => 1);
 
 $COBERTURA_REPORTS=$SCRIPT_PATH . '/cobertura-reports/';
-$MATRIX_FILE=$SCRIPT_PATH . '/matrix.html';
+$MATRIX_FILE=$SCRIPT_PATH . '/reports/html/matrix.html';
 $table = '<table border="1">';
 
 opendir(my $dh, $COBERTURA_REPORTS) || die;
