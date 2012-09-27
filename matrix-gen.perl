@@ -3,7 +3,7 @@
 use XML::Simple;
 use File::Basename;
 
-my $SCRIPT_PATH = SCRIPT_PATH(__FILE__);
+my $SCRIPT_PATH = dirname(__FILE__);
 my $simple = XML::Simple->new (ForceArray => 1, KeepRoot => 1);
 
 $COBERTURA_REPORTS=$SCRIPT_PATH . '/cobertura-reports/';
