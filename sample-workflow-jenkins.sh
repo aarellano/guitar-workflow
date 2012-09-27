@@ -163,4 +163,11 @@ perl ./matrix-gen.perl
 echo
 echo LINK TO THE HTML MATRIX: file://$PWD/matrix.html
 echo
+echo "
+     /\    _
+    /  \ _| |_
+   / /\ \_   _|
+  / ____ \|_|
+ /_/    \_\
+               "
 ## END RUNNING TESTS
