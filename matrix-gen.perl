@@ -2,11 +2,13 @@
 
 use XML::Simple;
 use File::Basename;
+use File::Path qw(make_path);
 
 my $SCRIPT_PATH = dirname(__FILE__);
 my $simple = XML::Simple->new (ForceArray => 1, KeepRoot => 1);
 
 $COBERTURA_REPORTS=$SCRIPT_PATH . '/cobertura-reports/';
+make_path('reports/html');
 $MATRIX_FILE=$SCRIPT_PATH . '/reports/html/matrix.html';
 $table = '<table border="1">';
 
