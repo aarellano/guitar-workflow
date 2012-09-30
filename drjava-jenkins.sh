@@ -1,5 +1,5 @@
 #!/bin/bash
-# This script enables and runs a simple sample example workflow on using GUITAR
+# This script rips and runs test cases on DrJava using GUITAR
 
 BUILD_PATH=$PWD/trunk/dist
 BUILD_FILE=$PWD/trunk/build.xml
@@ -93,6 +93,13 @@ echo 'Checking out GUITAR source'
 if [ ! -d "$PWD/trunk" ]; then
 	svn co https://guitar.svn.sourceforge.net/svnroot/guitar/trunk@3320
 fi
+
+echo 'Checking out DrJava'
+svn co http://drjava.svn.sourceforge.net/viewvc/drjava/trunk/
+
+## TEMPORARY EARLY EXIT. WIP STEP BY STEP :)
+exit 0
+##################
 
 echo 'Building project'
 if [ -d "$BUILD_PATH" ]; then
