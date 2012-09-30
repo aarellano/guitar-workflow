@@ -95,7 +95,10 @@ if [ ! -d "$PWD/trunk" ]; then
 fi
 
 echo 'Checking out DrJava'
-svn co http://drjava.svn.sourceforge.net/viewvc/drjava/trunk/
+# we only checkout the source code once. We are not even updating it if there are changes upstream
+if [ ! -d "$PWD/trunk" ]; then
+	svn co http://drjava.svn.sourceforge.net/viewvc/drjava/trunk/
+fi
 
 ## TEMPORARY EARLY EXIT. WIP STEP BY STEP :)
 exit 0
