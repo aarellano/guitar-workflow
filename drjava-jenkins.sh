@@ -90,14 +90,14 @@ echo
 ## END CHECKING FOR REQUIRED SOFTWARE
 
 echo 'Checking out GUITAR source'
-if [ ! -d "$PWD/trunk" ]; then
-	svn co https://guitar.svn.sourceforge.net/svnroot/guitar/trunk@3320
+if [ ! -d "$PWD/guitar" ]; then
+	svn co https://guitar.svn.sourceforge.net/svnroot/guitar/trunk@3320 ./guitar
 fi
 
 echo 'Checking out DrJava'
 # we only checkout the source code once. We are not even updating it if there are changes upstream
-if [ ! -d "$PWD/trunk" ]; then
-	svn co http://drjava.svn.sourceforge.net/viewvc/drjava/trunk/
+if [ ! -d "$PWD/drjava" ]; then
+	svn co http://drjava.svn.sourceforge.net/viewvc/drjava/trunk/ ./drjava
 fi
 
 ## TEMPORARY EARLY EXIT. WIP STEP BY STEP :)
