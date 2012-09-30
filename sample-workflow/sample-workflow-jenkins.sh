@@ -1,5 +1,6 @@
 #!/bin/bash
-# This script enables and runs a simple sample example workflow on using GUITAR
+# This script may be called inside a Jenkins job.
+# It runs a simple sample example workflow on using GUITAR
 
 BUILD_PATH=$PWD/trunk/dist
 BUILD_FILE=$PWD/trunk/build.xml
@@ -158,7 +159,7 @@ if $RUN_TESTS; then
 	fi
 fi
 
-perl ./matrix-gen.perl
+perl ../util/matrix-gen.perl
 
 echo
 echo LINK TO THE HTML MATRIX: file://$PWD/reports/html/matrix.html
