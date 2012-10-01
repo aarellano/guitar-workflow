@@ -38,7 +38,7 @@ source "$root_dir/common/util.sh"
 source "`dirname $0`/aut.cfg"
 source "`dirname $0`/aut.utils.sh"
 
-if [ ! -d $aut_src_dir ]; then
+if [ ! -d $aut_src_dir/src ]; then
 	echo "Checking out to $aut_src_dir"
 	exec_cmd "mkdir -p $aut_src_dir"
 	pushd $aut_src_dir

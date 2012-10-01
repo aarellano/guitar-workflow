@@ -59,7 +59,7 @@ source "$aut_scripts_dir/aut.cfg"
 exec_cmd "mkdir -p $aut_inst_dir"
 
 # Instrument
-cmd="cobertura-instrument  --datafile $cobertura_data_file_clean --destination $aut_inst_dir $aut_cov_bin_list"
+cmd="cobertura-instrument --destination $aut_inst_dir --datafile $cobertura_data_file_clean $aut_cov_bin_list"
 exec_cmd "$cmd"
 ret=$?
 
