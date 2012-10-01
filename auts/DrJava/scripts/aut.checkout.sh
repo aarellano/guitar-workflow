@@ -38,21 +38,14 @@ source "$root_dir/common/util.sh"
 source "`dirname $0`/aut.cfg"
 source "`dirname $0`/aut.utils.sh"
 
-echo "Checking out to $aut_src_dir"
-exec_cmd "mkdir -p $aut_src_dir"
-echo "DONE"
+if [ ! -d $aut_src_dir ]; then
+	echo "Checking out to $aut_src_dir"
+	exec_cmd "mkdir -p $aut_src_dir"
+	pushd $aut_src_dir
+	exec_cmd "svn co https://drjava.svn.sourceforge.net/svnroot/drjava/trunk/drjava@5686"
+	mv drjava/* drjava/.[^.]* .
+	popd
+	rm -rf drjava
+fi
 
-# Enter src dir
-pushd $aut_src_dir
-
-# Cleanup old stuff
-exec_cmd "rm -rf * "
-echo "DONE"
-
-# Download the application
-exec_cmd "svn co https://drjava.svn.sourceforge.net/svnroot/drjava/trunk/drjava"
-mv drjava/* drjava/.[^.]* .
-rm -rf drjava
-echo "DONE"
-
-exit $ret
+exit 0

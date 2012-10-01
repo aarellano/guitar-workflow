@@ -1,13 +1,16 @@
 #!/bin/bash
 # This script rips and runs test cases on DrJava using GUITAR
 
-BUILD_PATH=$PWD/trunk/dist
-BUILD_FILE=$PWD/trunk/build.xml
-AUT_PATH=$PWD/trunk/dist/guitar/jfc-aut/RadioButton
-AUT_CLASSES=$AUT_PATH/bin
-INSTRUMENTED_CLASSES=$PWD/trunk/dist/guitar/jfc-aut/RadioButton/instrumented-classes
-JFC_DIST_PATH=$PWD/trunk/dist/guitar
-REPORTS_PATH=$PWD/cobertura-reports
+WORKSPACE='/var/lib/jenkins/jobs/phase2/workspace'
+AUT_ROOT=$WORKSPACE'/drjava-repo'
+AUT_BIN=$WORKSPACE'/aut_bin'
+AUT_INST=$WORKSPACE'/aut_inst'
+GUITAR_ROOT=$WORKSPACE'/guitar'
+# AUT_PATH=`dirname $0`/trunk/dist/guitar/jfc-aut/RadioButton
+# AUT_CLASSES=$AUT_PATH/bin
+# INSTRUMENTED_CLASSES=`dirname $0`/trunk/dist/guitar/jfc-aut/RadioButton/instrumented-classes
+# JFC_DIST_PATH=`dirname $0`/trunk/dist/guitar
+# REPORTS_PATH=`dirname $0`/cobertura-reports
 
 usage()
 {
@@ -90,33 +93,41 @@ fi
 echo
 ## END CHECKING FOR REQUIRED SOFTWARE
 
-echo 'Checking out GUITAR source'
-if [ ! -d "$PWD/guitar" ]; then
-	svn co https://guitar.svn.sourceforge.net/svnroot/guitar/trunk@3320 guitar
+if [ ! -d $GUITAR_ROOT ]; then
+	echo 'Checking out GUITAR source'
+	svn co https://guitar.svn.sourceforge.net/svnroot/guitar/trunk@3320 $GUITAR_ROOT
 fi
 
-echo 'Checking out DrJava'
 # we only checkout the source code once. We are not even updating it if there are changes upstream
-if [ ! -d "$PWD/drjava" ]; then
-	svn co https://drjava.svn.sourceforge.net/svnroot/drjava drjava
+if [ ! -d $AUT_ROOT ]; then
+	echo 'Checking out DrJava'
+	svn co https://drjava.svn.sourceforge.net/svnroot/drjava $AUT_ROOT
 fi
 
-echo 'Building project'
-if [ -d "$BUILD_PATH" ]; then
-        echo 'Project already built. Skipping invocation to ant'
-else
-        echo 'Building the project jfc.dist'
-        ant -f $BUILD_FILE jfc.dist
+# echo 'Building GUITAR'
+# if [ -d "$BUILD_PATH" ]; then
+#         echo 'Project already built. Skipping invocation to ant'
+# else
+#         echo 'Building the project jfc.dist'
+#         ant -f $BUILD_FILE jfc.dist
 
-        echo 'Updating cobertura.jar'
-        wget http://sourceforge.net/projects/cobertura/files/cobertura/1.9.4.1/cobertura-1.9.4.1-bin.tar.gz
-        tar -C $JFC_DIST_PATH/jars -xzf cobertura-1.9.4.1-bin.tar.gz
-        rm -f cobertura-1.9.4.1-bin.tar.gz
-	rm -f $JFC_DIST_PATH/jars/cobertura.jar
-fi
+#         echo 'Updating cobertura.jar'
+#         wget http://sourceforge.net/projects/cobertura/files/cobertura/1.9.4.1/cobertura-1.9.4.1-bin.tar.gz
+#         tar -C $JFC_DIST_PATH/jars -xzf cobertura-1.9.4.1-bin.tar.gz
+#         rm -f cobertura-1.9.4.1-bin.tar.gz
+# 	rm -f $JFC_DIST_PATH/jars/cobertura.jar
+# fi
+
+export PATH=$PATH:$WORKSPACE/drjava/common
+common-init-dir.sh DrJava
 
 echo
 ## END BUILDING PROJECT
+
+common-checkout.sh DrJava
+common-build.sh DrJava
+common-inst.sh DrJava
+
 
 ## TEMPORARY EARLY EXIT. WIP STEP BY STEP :)
 exit 0
@@ -172,7 +183,7 @@ fi
 perl ./matrix-gen.perl
 
 echo
-echo LINK TO THE HTML MATRIX: file://$PWD/reports/html/matrix.html
+echo LINK TO THE HTML MATRIX: file://`dirname $0`/reports/html/matrix.html
 echo
 echo "
      /\    _
