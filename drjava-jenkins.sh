@@ -98,12 +98,6 @@ if [ ! -d $GUITAR_ROOT ]; then
 	svn co https://guitar.svn.sourceforge.net/svnroot/guitar/trunk@3320 $GUITAR_ROOT
 fi
 
-# we only checkout the source code once. We are not even updating it if there are changes upstream
-if [ ! -d $AUT_ROOT ]; then
-	echo 'Checking out DrJava'
-	svn co https://drjava.svn.sourceforge.net/svnroot/drjava $AUT_ROOT
-fi
-
 # echo 'Building GUITAR'
 # if [ -d "$BUILD_PATH" ]; then
 #         echo 'Project already built. Skipping invocation to ant'
