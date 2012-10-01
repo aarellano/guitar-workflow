@@ -118,7 +118,7 @@ fi
 # 	rm -f $JFC_DIST_PATH/jars/cobertura.jar
 # fi
 
-export PATH=$PATH:$WORKSPACE/drjava/common
+export PATH=$PATH:$WORKSPACE/common
 common-init-dir.sh DrJava
 
 echo
