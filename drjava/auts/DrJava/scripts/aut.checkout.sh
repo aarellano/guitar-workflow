@@ -26,56 +26,33 @@
 #
 
 #############################
-# Build Buddi to Buddi/bin/ dir
+# Checkout DrJava to DrJava/bin/ dir
 #	By	baonn@cs.umd.edu
 #	Date: 	06/08/2011
+# 	Updated by aarella@umd.edu
+#	Date:	30/09/2012
 ##############################
 
-#--------------
-# Configuration
-#--------------
 source "$root_dir/common/common.cfg"
 source "$root_dir/common/util.sh"
 source "`dirname $0`/aut.cfg"
+source "`dirname $0`/aut.utils.sh"
 
-#--------------
-# Parameter check
-#--------------
-echo "Build into $aut_bin_dir"
-if [ ! -e $aut_bin_dir ]
-then	
-   exec_cmd "mkdir $aut_bin_dir"
-   echo "DONE"
-fi
-
-#--------------
-# Cleanup up old stuff
-#--------------
-exec_cmd "rm -rf $aut_bin_dir/* "
+echo "Checking out to $aut_src_dir"
+exec_cmd "mkdir -p $aut_src_dir"
 echo "DONE"
 
-#--------------
-# Build
-#--------------
+# Enter src dir
 pushd $aut_src_dir
-exec_cmd "sed -i 's/debug=\"off\"/debug=\"on\"/g' build.xml"
-exec_cmd "ant"
-popd
-exec_cmd "cp -r $aut_src_dir/build/lib/*.jar $aut_bin_dir/"
-exec_cmd "rm -rf $aut_src_dir/build/"
-pushd $aut_bin_dir
-exec_cmd "jar xf *.jar"
-exec_cmd "rm -f *.jar"
-popd
 
-#--------------
-# Sanity check
-#--------------
-ret=0
-class=`echo $aut_mainclass | perl -pi -e 's/\./\//g' `
-if [ ! -e $aut_bin_dir/$class.class ]
-then
-   echo FAILED build $aut_name
-   ret=1
-fi
+# Cleanup old stuff
+exec_cmd "rm -rf * "
+echo "DONE"
+
+# Download the application
+exec_cmd "svn co https://drjava.svn.sourceforge.net/svnroot/drjava/trunk/drjava"
+mv drjava/* drjava/.[^.]* .
+rm -rf drjava
+echo "DONE"
+
 exit $ret

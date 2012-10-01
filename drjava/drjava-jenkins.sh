@@ -75,6 +75,7 @@ echo
 
 echo 'Checking for required software'
 if ! which java ; then PACKAGES+=' openjdk-6-jdk'; fi > /dev/null
+if ! which java ; then PACKAGES+=' openjdk-7-jdk'; fi > /dev/null
 if ! which ant ; then PACKAGES+=' ant'; fi > /dev/null
 if ! which svn ; then PACKAGES+=' subversion'; fi > /dev/null
 if ! which xvfb-run ; then PACKAGES+=' xvfb'; fi > /dev/null
@@ -100,10 +101,6 @@ if [ ! -d "$PWD/drjava" ]; then
 	svn co https://drjava.svn.sourceforge.net/svnroot/drjava drjava
 fi
 
-## TEMPORARY EARLY EXIT. WIP STEP BY STEP :)
-exit 0
-##################
-
 echo 'Building project'
 if [ -d "$BUILD_PATH" ]; then
         echo 'Project already built. Skipping invocation to ant'
@@ -120,6 +117,10 @@ fi
 
 echo
 ## END BUILDING PROJECT
+
+## TEMPORARY EARLY EXIT. WIP STEP BY STEP :)
+exit 0
+##################
 
 echo 'Updating scripts to run cobertura'
 

@@ -1,0 +1,25 @@
+drjava
+
+# Load parameters
+#--------------------------------------
+source "`dirname $0`/common-load-args.sh"
+
+#--------------------------------------
+# Load common layout
+#--------------------------------------
+source "`dirname $0`/common.cfg"
+
+apt-get install openjdk-7-jdk
+
+common-init
+common-checkout
+
+export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-i386
+export JAVA7_HOME=/usr/lib/jvm/java-7-openjdk-i386
+common-build
+
+wget http://sourceforge.net/projects/cobertura/files/cobertura/1.9.4.1/cobertura-1.9.4.1-bin.tar.gz
+tar xzf cobertura-1.9.4.1-bin.tar.gz
+rm cobertura-1.9.4.1-bin.tar.gz
+mv cobertura-1.9.4.1-bin covertura
+mv cobertura $default_tool_dir

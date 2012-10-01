@@ -25,63 +25,45 @@
 #  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-####################################################
-# Checkout Buddi
+#############################
+# Build DrJava to DrJava/bin/ dir
 #	By	baonn@cs.umd.edu
 #	Date: 	06/08/2011
-####################################################
+# 	Updated by aarella@umd.edu
+#	Date:	30/09/2012
+##############################
 
+#--------------
+# Configuration
+#--------------
 source "$root_dir/common/common.cfg"
 source "$root_dir/common/util.sh"
 source "`dirname $0`/aut.cfg"
-source "`dirname $0`/aut.utils.sh"
 
-echo "Checking out to $aut_src_dir"
-exec_cmd "mkdir -p $aut_src_dir"
+#--------------
+# Parameter check
+#--------------
+echo "Build into $aut_bin_dir"
+if [ ! -e $aut_bin_dir ]
+then
+   exec_cmd "mkdir $aut_bin_dir"
+   echo "DONE"
+fi
+
+#--------------
+# Cleanup up old stuff
+#--------------
+exec_cmd "rm -rf $aut_bin_dir/* "
 echo "DONE"
 
-# Enter src dir 
+#--------------
+# Build
+#--------------
 pushd $aut_src_dir
-
-# Cleanup old stuff
-exec_cmd "rm -rf * "
-echo "DONE"
-
-# Create tmp dir for downloading
-tmp_dir="tmp"
-if [ ! -e $tmp_dir ]
-then
-	mkdir $tmp_dir
-fi
-
-# Enter tmp directory
-pushd $tmp_dir
-
-# Download the application 
-exec_cmd "wget http://sourceforge.net/projects/jabref/files/jabref/2.5/JabRef-2.5-src.zip"
-echo "DONE"
-
-# unzip
-exec_cmd "unzip *.zip "
-echo "DONE"
-
-# Exit tmp dir back to src 
-popd 
-
-# Copy untar-ed source code 
-exec_cmd "mv $tmp_dir/jabref*/* ."
-echo "DONE"
-
-# Cleanup .tar file and tmp directory
-exec_cmd "rm -rf $tmp_dir"
-
-# Sanity check to see if "src" dir exists in the Buddi src
-ret=0
-if [ ! -e "src" ]
-then
-   echo FAILED checkout
-   ret=1
-fi
-
+exec_cmd "export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-i386"
+exec_cmd "export JAVA7_HOME=/usr/lib/jvm/java-7-openjdk-i386"
+exec_cmd "ant jar"
+exec_cmd "cp drjava.jar $aut_bin_dir"
 popd
-exit $ret
+
+exit 0

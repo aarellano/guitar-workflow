@@ -26,7 +26,7 @@
 #
 
 ####################################################
-# Instrument the  application 
+# Instrument the  application
 #
 #	By	baonn@cs.umd.edu
 #	Date: 	06/08/2011
@@ -51,16 +51,15 @@ source "`dirname $0`/util.sh"
 source "`dirname $0`/common.cfg"
 
 #--------------------------------------
-# Load aut local configuration 
+# Load aut local configuration
 #--------------------------------------
 source "$aut_scripts_dir/aut.cfg"
 
 # Creating dirs
 exec_cmd "mkdir -p $aut_inst_dir"
 
-# Instrument 
-cmd_cobertura_inst="$cobertura_dir/cobertura-instrument.sh"
-cmd="$cmd_cobertura_inst  --datafile $cobertura_data_file_clean --destination $aut_inst_dir $aut_cov_bin_list"
+# Instrument
+cmd="cobertura-instrument  --datafile $cobertura_data_file_clean --destination $aut_inst_dir $aut_cov_bin_list"
 exec_cmd "$cmd"
 ret=$?
 
