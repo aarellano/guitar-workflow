@@ -59,8 +59,10 @@ source "$aut_scripts_dir/aut.cfg"
 exec_cmd "mkdir -p $aut_inst_dir"
 
 # Instrument
+pushd $aut_bin_dir
 cmd="cobertura-instrument --destination $aut_inst_dir --datafile $cobertura_data_file_clean $aut_cov_bin_list"
 exec_cmd "$cmd"
+popd
 ret=$?
 
 echo "*** DONE $aut_name ***"
