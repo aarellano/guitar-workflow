@@ -124,7 +124,14 @@ fi
 
 if [ ! -d $AUT_PATH/classes ]; then
 	echo 'Building AUT'
-	ant -f $AUT_BUILD_FILE
+	# DrJava needs the env JAVA7_HOME set
+	if uname -a | grep i386 ; then
+		export JAVA7_HOME=/usr/lib/jvm/java-7-openjdk-i386
+	else
+		export JAVA7_HOME=/usr/lib/jvm/java-7-openjdk-amd64
+	fi
+
+	ant jar -f $AUT_BUILD_FILE
 fi
 
 if [ ! -d $AUT_INST ]; then
