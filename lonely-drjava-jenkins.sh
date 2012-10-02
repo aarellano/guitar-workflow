@@ -1,7 +1,6 @@
 #!/bin/bash
 # This script rips and runs test cases on DrJava using GUITAR
 
-echo AUTO WORKSPACE = $WORKSPACE
 if [ -z $WORKSPACE ]; then
 	WORKSPACE='/var/lib/jenkins/workspace/phase2'
 fi
@@ -16,8 +15,6 @@ GUITAR_BUILD_FILE=$GUITAR_PATH'/build.xml'
 # INSTRUMENTED_CLASSES=`dirname $0`/trunk/dist/guitar/jfc-aut/RadioButton/instrumented-classes
 # JFC_DIST_PATH=`dirname $0`/trunk/dist/guitar
 # REPORTS_PATH=`dirname $0`/cobertura-reports
-
-echo WORKSPACE = $WORKSPACE
 
 usage()
 {
@@ -103,7 +100,9 @@ if [ ! -d $GUITAR_PATH ]; then
 	echo 'Checking out GUITAR source'
 	mkdir -p $GUITAR_PATH
 	svn co https://guitar.svn.sourceforge.net/svnroot/guitar/trunk@3320 $GUITAR_PATH
+fi
 
+if [ ! -d $GUITAR_PATH/dist ]; then
 	echo 'Building the GUITAR target jfc.dist'
 	ant -f $GUITAR_BUILD_FILE jfc.dist
 fi
@@ -121,11 +120,11 @@ if [ ! -d $AUT_PATH ]; then
 	echo 'Checking out AUT'
 	mkdir -p $AUT_PATH
 	svn co https://drjava.svn.sourceforge.net/svnroot/drjava/trunk/drjava@5686 $AUT_PATH
-	# This is just to shorten the path
-	mv $AUT_PATH/drjava/* $AUT_PATH/drjava/.[^.]* $AUT_PATH
+fi
 
+fi [ ! -d $AUT_PATH/classes ]; then
 	echo 'Building AUT'
-	ant -f $AUT_BUILD_FILE
+	ant -f $AUT_BUILD_FILE]
 fi
 
 if [ ! -d $AUT_INST ]; then
