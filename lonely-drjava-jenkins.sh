@@ -105,16 +105,16 @@ if [ ! -d $WORKSPACE/cobertura ]; then
 	rm -f $JFC_DIST_PATH/jars/cobertura.jar
 fi
 
-# if [ ! -d $GUITAR_PATH ]; then
-# 	echo 'Checking out GUITAR source'
-# 	mkdir -p $GUITAR_PATH
-# 	svn co https://guitar.svn.sourceforge.net/svnroot/guitar/trunk@3320 $GUITAR_PATH
-# fi
+if [ ! -d $GUITAR_PATH ]; then
+	echo 'Checking out GUITAR source'
+	mkdir -p $GUITAR_PATH
+	svn co https://guitar.svn.sourceforge.net/svnroot/guitar/trunk@3320 $GUITAR_PATH
+fi
 
-# if [ ! -d $GUITAR_PATH/dist ]; then
-# 	echo 'Building the GUITAR target jfc.dist'
-# 	ant -f $GUITAR_BUILD_FILE jfc.dist
-# fi
+if [ ! -d $GUITAR_PATH/dist ]; then
+	echo 'Building the GUITAR target jfc.dist'
+	ant -f $GUITAR_BUILD_FILE jfc.dist
+fi
 
 echo
 ## END BUILDING PROJECT
