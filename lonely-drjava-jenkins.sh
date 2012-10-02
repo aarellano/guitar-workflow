@@ -1,7 +1,9 @@
 #!/bin/bash
 # This script rips and runs test cases on DrJava using GUITAR
 
-WORKSPACE='/var/lib/jenkins/jobs/phase2/workspace'
+if [ -z $WORKSPACE ]; then
+	WORKSPACE='/var/lib/jenkins/workspace/phase2'
+fi
 AUT_PATH=$WORKSPACE'/drjava-repo'
 AUT_BUILD_FILE=$AUT_PATH'build.xml'
 AUT_BIN=$WORKSPACE'/aut_bin'
@@ -13,6 +15,8 @@ GUITAR_BUILD_FILE=$GUITAR_PATH'/build.xml'
 # INSTRUMENTED_CLASSES=`dirname $0`/trunk/dist/guitar/jfc-aut/RadioButton/instrumented-classes
 # JFC_DIST_PATH=`dirname $0`/trunk/dist/guitar
 # REPORTS_PATH=`dirname $0`/cobertura-reports
+
+echo WORKSPACE = $WORKSPACE
 
 usage()
 {
@@ -129,9 +133,6 @@ exit 0
 ##################
 
 common-inst.sh DrJava
-
-
-
 
 echo 'Updating scripts to run cobertura'
 
