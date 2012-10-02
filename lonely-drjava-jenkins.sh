@@ -96,6 +96,14 @@ fi
 echo
 ## END CHECKING FOR REQUIRED SOFTWARE
 
+if [ -d $WORKSPACE/cobertura ]; then
+	echo 'Updating cobertura.jar'
+	wget http://sourceforge.net/projects/cobertura/files/cobertura/1.9.4.1/cobertura-1.9.4.1-bin.tar.gz
+	tar -C $WORKSPACE/cobertura -xzf cobertura-1.9.4.1-bin.tar.gz
+	rm -f cobertura-1.9.4.1-bin.tar.gz
+	rm -f $JFC_DIST_PATH/jars/cobertura.jar
+fi
+
 # if [ ! -d $GUITAR_PATH ]; then
 # 	echo 'Checking out GUITAR source'
 # 	mkdir -p $GUITAR_PATH
@@ -106,12 +114,6 @@ echo
 # 	echo 'Building the GUITAR target jfc.dist'
 # 	ant -f $GUITAR_BUILD_FILE jfc.dist
 # fi
-
-	# echo 'Updating cobertura.jar'
-	# wget http://sourceforge.net/projects/cobertura/files/cobertura/1.9.4.1/cobertura-1.9.4.1-bin.tar.gz
-	# tar -C $JFC_DIST_PATH/jars -xzf cobertura-1.9.4.1-bin.tar.gz
-	# rm -f cobertura-1.9.4.1-bin.tar.gz
-	# rm -f $JFC_DIST_PATH/jars/cobertura.jar
 
 echo
 ## END BUILDING PROJECT
