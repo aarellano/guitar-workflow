@@ -4,7 +4,7 @@
 if [ -z $WORKSPACE ]; then
 	WORKSPACE='/var/lib/jenkins/workspace/phase2'
 fi
-AUT_PATH=$WORKSPACE'/drjava-repo'
+AUT_PATH=$WORKSPACE'/drjava'
 AUT_BUILD_FILE=$AUT_PATH'build.xml'
 AUT_BIN=$WORKSPACE'/aut_bin'
 AUT_INST=$WORKSPACE'/aut_inst'
@@ -83,7 +83,7 @@ echo
 ## END CHECKING FOR ADMINISTRATIVE PRIVILEGES
 
 echo 'Checking for required software'
-if ! java -version 2>&1 | grep 1.7 ; then PACKAGES+=' openjdk-7-jdk'; fi > /dev/null
+# if ! java -version 2>&1 | grep 1.7 ; then PACKAGES+=' openjdk-7-jdk'; fi > /dev/null
 if ! which ant ; then PACKAGES+=' ant'; fi > /dev/null
 if ! which svn ; then PACKAGES+=' subversion'; fi > /dev/null
 if ! which xvfb-run ; then PACKAGES+=' xvfb'; fi > /dev/null
@@ -118,7 +118,7 @@ echo
 
 if [ ! -d $AUT_PATH ]; then
 	echo 'Checking out AUT'
-	mkdir $AUT_PATH
+	mkdir -p $AUT_PATH
 	svn co https://drjava.svn.sourceforge.net/svnroot/drjava/trunk/drjava@5686 $AUT_PATH
 	# This is just to shorten the path
 	mv $AUT_PATH/drjava/* $AUT_PATH/drjava/.[^.]* $AUT_PATH
@@ -127,6 +127,14 @@ if [ ! -d $AUT_PATH ]; then
 	ant -f $AUT_BUILD_FILE
 fi
 
+if [ ! -d $AUT_INST ]; then
+	echo 'Instrumenting classes'
+	mkdir -p $AUT_INST
+	mkdir -p $AUT_BIN
+	cp $AUT_PATH/drjava.jar $AUT_BIN
+	cobertura-instrument --destination $AUT_INST $AUT_BIN/drjava.jar
+	cp cobertura.ser cobertura.ser.bkp
+fi
 
 ## TEMPORARY EARLY EXIT. WIP STEP BY STEP :)
 exit 0
