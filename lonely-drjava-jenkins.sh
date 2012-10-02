@@ -98,6 +98,7 @@ echo
 
 if [ ! -d $WORKSPACE/cobertura ]; then
 	echo 'Updating cobertura.jar'
+	mkdir -p $WORKSPACE/cobertura
 	wget http://sourceforge.net/projects/cobertura/files/cobertura/1.9.4.1/cobertura-1.9.4.1-bin.tar.gz
 	tar -C $WORKSPACE/cobertura -xzf cobertura-1.9.4.1-bin.tar.gz
 	rm -f cobertura-1.9.4.1-bin.tar.gz
