@@ -96,7 +96,7 @@ fi
 echo
 ## END CHECKING FOR REQUIRED SOFTWARE
 
-if [ -d $WORKSPACE/cobertura ]; then
+if [ ! -d $WORKSPACE/cobertura ]; then
 	echo 'Updating cobertura.jar'
 	wget http://sourceforge.net/projects/cobertura/files/cobertura/1.9.4.1/cobertura-1.9.4.1-bin.tar.gz
 	tar -C $WORKSPACE/cobertura -xzf cobertura-1.9.4.1-bin.tar.gz
