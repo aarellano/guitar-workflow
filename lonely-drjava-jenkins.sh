@@ -1,6 +1,7 @@
 #!/bin/bash
 # This script rips and runs test cases on DrJava using GUITAR
 
+echo AUTO WORKSPACE = $WORKSPACE
 if [ -z $WORKSPACE ]; then
 	WORKSPACE='/var/lib/jenkins/workspace/phase2'
 fi
