@@ -137,9 +137,9 @@ fi
 if [ ! -d $AUT_INST ]; then
 	echo 'Instrumenting classes'
 	mkdir -p $AUT_INST
-	cp $AUT_PATH/drjava.jar $WORKSPACE
-	cobertura-instrument --destination $AUT_INST $WORKSPACE/drjava.jar
-	rm $WORKSPACE/drjava.jar
+	cp $AUT_PATH/drjava.jar .
+	cobertura-instrument --destination $AUT_INST drjava.jar
+	rm drjava.jar
 	cp cobertura.ser cobertura.ser.bkp
 fi
 
