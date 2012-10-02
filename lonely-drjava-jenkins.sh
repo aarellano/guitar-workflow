@@ -141,16 +141,16 @@ if [ ! -d $AUT_INST ]; then
 	echo 'Instrumenting classes'
 	mkdir -p $AUT_INST
 
-	pushd $AUT_PATH
+	pushd $AUT_BIN
 	cp $AUT_PATH/drjava.jar .
-	jar tf drjava.jar
+	jar xf drjava.jar
 	# This class doesn't have code line information. Cobertura cant' work with it
 	# We are removing it till a propper compilation solution is done
 	rm edu/rice/cs/drjava/model/compiler/CompilerOptions\$1.class
+	rm drjava.jar
 	popd
 
 	cobertura-instrument --destination $AUT_INST $AUT_PATH/edu/rice/cs/drjava
-	rm drjava.jar
 	cp cobertura.ser cobertura.ser.bkp
 fi
 
