@@ -5,7 +5,7 @@ if [ -z $WORKSPACE ]; then
 	WORKSPACE='/var/lib/jenkins/workspace/phase2'
 fi
 AUT_PATH=$WORKSPACE'/drjava'
-AUT_BUILD_FILE=$AUT_PATH'build.xml'
+AUT_BUILD_FILE=$AUT_PATH/'build.xml'
 AUT_BIN=$WORKSPACE'/aut_bin'
 AUT_INST=$WORKSPACE'/aut_inst'
 GUITAR_PATH=$WORKSPACE'/guitar'
@@ -122,9 +122,9 @@ if [ ! -d $AUT_PATH ]; then
 	svn co https://drjava.svn.sourceforge.net/svnroot/drjava/trunk/drjava@5686 $AUT_PATH
 fi
 
-fi [ ! -d $AUT_PATH/classes ]; then
+if [ ! -d $AUT_PATH/classes ]; then
 	echo 'Building AUT'
-	ant -f $AUT_BUILD_FILE]
+	ant -f $AUT_BUILD_FILE
 fi
 
 if [ ! -d $AUT_INST ]; then
