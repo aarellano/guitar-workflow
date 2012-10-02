@@ -96,16 +96,16 @@ fi
 echo
 ## END CHECKING FOR REQUIRED SOFTWARE
 
-if [ ! -d $GUITAR_PATH ]; then
-	echo 'Checking out GUITAR source'
-	mkdir -p $GUITAR_PATH
-	svn co https://guitar.svn.sourceforge.net/svnroot/guitar/trunk@3320 $GUITAR_PATH
-fi
+# if [ ! -d $GUITAR_PATH ]; then
+# 	echo 'Checking out GUITAR source'
+# 	mkdir -p $GUITAR_PATH
+# 	svn co https://guitar.svn.sourceforge.net/svnroot/guitar/trunk@3320 $GUITAR_PATH
+# fi
 
-if [ ! -d $GUITAR_PATH/dist ]; then
-	echo 'Building the GUITAR target jfc.dist'
-	ant -f $GUITAR_BUILD_FILE jfc.dist
-fi
+# if [ ! -d $GUITAR_PATH/dist ]; then
+# 	echo 'Building the GUITAR target jfc.dist'
+# 	ant -f $GUITAR_BUILD_FILE jfc.dist
+# fi
 
 	# echo 'Updating cobertura.jar'
 	# wget http://sourceforge.net/projects/cobertura/files/cobertura/1.9.4.1/cobertura-1.9.4.1-bin.tar.gz
