@@ -15,7 +15,7 @@ aut_inst=$workspace'/aut_inst'
 guitar_path=$workspace'/guitar'
 guitar_build_file=$guitar_path'/build.xml'
 mainclass='edu.rice.cs.drjava.DrJava'
-configuration='$workspace/guitar-config/configuration.xml'
+configuration="$workspace/guitar-config/configuration.xml"
 intial_wait=2000
 # delay time between two events during ripping
 ripper_delay=500
