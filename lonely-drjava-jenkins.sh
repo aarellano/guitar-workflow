@@ -1,57 +1,6 @@
 #!/bin/bash
 # This script rips and runs test cases on DrJava using GUITAR
 
-if [ -z $WORKSPACE ]
-	then workspace='/var/lib/jenkins/workspace/phase2'
-	else workspace=$WORKSPACE
-fi
-scripts=$workspace'/guitar-scripts'
-aut_path=$workspace'/drjava'
-aut_cp=$aut_path/'drjava.jar'
-cobertura_CP=$workspace'/cobertura/cobertura1.9.4.1/cobertura.jar'
-aut_build_file=$aut_path/'build.xml'
-aut_bin=$workspace'/aut_bin'
-aut_inst=$workspace'/aut_inst'
-guitar_path=$workspace'/guitar'
-guitar_build_file=$guitar_path'/build.xml'
-guitar_dist_base_dir=$guitar_path'/dist/guitar'
-guitar_lib=$guitar_dist_base_dir/jars
-mainclass='edu.rice.cs.drjava.DrJava'
-configuration="$workspace/guitar-config/configuration.xml"
-intial_wait=2000
-# delay time between two events during ripping
-ripper_delay=500
-# the length of test suite
-tc_length=2
-# the maximum number of test case generated (0 means generate all)
-tc_no=$max_num_testcases
-# delay time between two events during replaying
-# this number is generally smaller than the $ripper_delay
-relayer_delay=200
-# Directory to store all output of the workflow
-output_dir=$workspace'/output'
-# GUI structure file
-gui_file="$output_dir/DrJava.GUI"
-# EFG file
-efg_file="$output_dir/DrJava.EFG"
-# Log file for the ripper
-# You can examine this file to get the widget
-# signature to ignore during ripping
-log_file="$output_dir/DrJava.log"
-# Test case directory
-testcases_dir="$output_dir/testcases"
-# GUI states directory
-states_dir="$output_dir/states"
-# Replaying log directory
-logs_dir="$output_dir/logs"
-
-# Preparing output directories
-mkdir -p $output_dir
-mkdir -p $testcases_dir
-mkdir -p $states_dir
-mkdir -p $logs_dir
-
-
 usage()
 {
 	echo "
@@ -105,6 +54,56 @@ while getopts ":h :x :m :c: :r :n" opt; do
 		;;
   esac
 done
+
+if [ -z $WORKSPACE ]
+	then workspace='/var/lib/jenkins/workspace/phase2'
+	else workspace=$WORKSPACE
+fi
+scripts=$workspace'/guitar-scripts'
+aut_path=$workspace'/drjava'
+aut_cp=$aut_path/'drjava.jar'
+cobertura_CP=$workspace'/cobertura/cobertura1.9.4.1/cobertura.jar'
+aut_build_file=$aut_path/'build.xml'
+aut_bin=$workspace'/aut_bin'
+aut_inst=$workspace'/aut_inst'
+guitar_path=$workspace'/guitar'
+guitar_build_file=$guitar_path'/build.xml'
+guitar_dist_base_dir=$guitar_path'/dist/guitar'
+guitar_lib=$guitar_dist_base_dir/jars
+mainclass='edu.rice.cs.drjava.DrJava'
+configuration="$workspace/guitar-config/configuration.xml"
+intial_wait=2000
+# delay time between two events during ripping
+ripper_delay=500
+# the length of test suite
+tc_length=2
+# the maximum number of test case generated (0 means generate all)
+tc_no=$max_num_testcases
+# delay time between two events during replaying
+# this number is generally smaller than the $ripper_delay
+relayer_delay=200
+# Directory to store all output of the workflow
+output_dir=$workspace'/output'
+# GUI structure file
+gui_file="$output_dir/DrJava.GUI"
+# EFG file
+efg_file="$output_dir/DrJava.EFG"
+# Log file for the ripper
+# You can examine this file to get the widget
+# signature to ignore during ripping
+log_file="$output_dir/DrJava.log"
+# Test case directory
+testcases_dir="$output_dir/testcases"
+# GUI states directory
+states_dir="$output_dir/states"
+# Replaying log directory
+logs_dir="$output_dir/logs"
+
+# Preparing output directories
+mkdir -p $output_dir
+mkdir -p $testcases_dir
+mkdir -p $states_dir
+mkdir -p $logs_dir
 
 echo 'Checking for administrative privileges'
 if ! groups | grep 'root\|admin\|sudo\|cluster' > /dev/null ; then

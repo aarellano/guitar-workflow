@@ -7,8 +7,6 @@ function usage {
         <tc-dir> [-D no-duplicate-event] [-T treat-terminal-event-specially]"
 }
 
-guitar_lib=$guitar_lib/jars
-
 # Main classes
 tcgen_launcher=edu.umd.cs.guitar.testcase.TestCaseGenerator
 
