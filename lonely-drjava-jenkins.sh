@@ -117,7 +117,7 @@ echo
 ## END CHECKING FOR ADMINISTRATIVE PRIVILEGES
 
 echo 'Checking for required software'
-if ! java -version 2>&1 | grep 1.7 ; > /dev/null then
+if ! java -version 2>&1 | grep 1.7 > /dev/null ; then
 	packages+=' openjdk-7-jdk' > /dev/null
 	if which java ; then
 		sudo apt-get -y remove openjdk-6-jdk
