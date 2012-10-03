@@ -29,8 +29,8 @@
 function usage {
 	echo "Usage: `basename $0` -cp <aut classpath> [guitar arguments]"
 }
-guitar_base_dir=$guitar_path
-guitar_lib=$guitar_base_dir/jars
+guitar_dist_base_dir=$guitar_path'/dist/guitar'
+guitar_lib=$guitar_dist_base_dir/jars
 
 if [ $# -lt 1 ];
 then
@@ -66,7 +66,7 @@ done
 
 
 # Change GUITAR_OPTS variable to run with the clean log file
-guitar_opts="$guitar_opts -Dlog4j.configuration=$guitar_base_dir/log/guitar-clean.glc"
+guitar_opts="$guitar_opts -Dlog4j.configuration=$guitar_dist_base_dir/log/guitar-clean.glc"
 
 if [ -z "$java_cmd_prefix" ];
 then
@@ -79,7 +79,7 @@ if $XVFB; then
 	java_cmd_prefix="xvfb-run -a java"
 fi
 
-classpath=$guitar_base_dir:$guitar_classpath
+classpath=$guitar_dist_base_dir:$guitar_classpath
 
 if [ ! -z $addtional_classpath ]
 then
