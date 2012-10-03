@@ -14,6 +14,8 @@ aut_bin=$workspace'/aut_bin'
 aut_inst=$workspace'/aut_inst'
 guitar_path=$workspace'/guitar'
 guitar_build_file=$guitar_path'/build.xml'
+guitar_dist_base_dir=$guitar_path'/dist/guitar'
+guitar_lib=$guitar_dist_base_dir/jars
 mainclass='edu.rice.cs.drjava.DrJava'
 configuration="$workspace/guitar-config/configuration.xml"
 intial_wait=2000
@@ -203,14 +205,11 @@ if ! $skip_ripping; then
 
 	echo "Output directory:  $output_dir"
 
-
 	# Converting GUI structure to EFG
 	echo ""
 	echo "About to convert GUI structure file to Event Flow Graph (EFG) file"
 	#read -p "Press ENTER to continue..."
-	cmd="$scripts/gui2efg.sh -g $gui_file -e $efg_file"
-	echo $cmd
-	eval $cmd
+	$scripts/gui2efg.sh -g $gui_file -e $efg_file
 
 ## TEMPORARY EARLY EXIT. WIP STEP BY STEP :)
 exit 0
