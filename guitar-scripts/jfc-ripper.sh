@@ -90,7 +90,7 @@ fi
 
 if [ ! -d $workspace'/tmp' ]; then mkdir -p $workspace'/tmp'; fi
 
-rm -rf $workspace'/tmp'
+rm -rf $workspace'/tmp/*'
 ripper_cmd="$java_cmd_prefix -Duser.home=$workspace/tmp $guitar_opts -cp $classpath $ripper_launcher $guitar_args"
 exec $ripper_cmd
 
