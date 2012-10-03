@@ -116,7 +116,7 @@ echo
 
 echo 'Checking for required software'
 if ! java -version 2>&1 | grep 1.7 ; then
-	PACKAGES+=' openjdk-7-jdk' > /dev/null
+	packages+=' openjdk-7-jdk' > /dev/null
 	if which java ; then
 		sudo apt-get -y remove openjdk-6-jdk
 		sudo apt-get -y autoremove
