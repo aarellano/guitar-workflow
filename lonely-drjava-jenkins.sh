@@ -5,7 +5,7 @@ if [ -z $WORKSPACE ]
 	then workspace='/var/lib/jenkins/workspace/phase2'
 	else workspace=$WORKSPACE
 fi
-scripts=$workspace'/scripts'
+scripts=$workspace'/guitar-scripts'
 aut_path=$workspace'/drjava'
 aut_cp=$aut_path/'drjava.jar'
 cobertura_CP=$workspace'/cobertura/cobertura1.9.4.1/cobertura.jar'
