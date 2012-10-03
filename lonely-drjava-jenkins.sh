@@ -252,37 +252,6 @@ do
 
 done
 
-echo
-## END REPLACING SCRIPTS
-
-echo 'Instrumenting classes'
-if [ ! -d "$INSTRUMENTED_CLASSES" ]; then
-        mkdir -p $INSTRUMENTED_CLASSES
-fi
-rm -rf $INSTRUMENTED_CLASSES"/*"
-rm cobertura.ser # just in case
-cobertura-instrument --destination $INSTRUMENTED_CLASSES $AUT_CLASSES
-cp cobertura.ser cobertura.ser.bkp
-
-echo
-## END INSTRUMENTING CLASSES
-
-echo 'Running tests'
-if $run_tests; then
-	if $auto_run; then
-		# First we clean the reports directory
-		rm -rf $reports_path/*
-
-		. $JFC_DIST_PATH/jfc-sample-workflow.sh
-	else
-		if $XVFB; then
-			xvfb-run -a java -cp $JFC_DIST_PATH/jars/cobertura-1.9.4.1/cobertura.jar:$INSTRUMENTED_CLASSES:$AUT_CLASSES -Dnet.sourceforge.cobertura.datafile=cobertura.ser Project
-		else
-			java -cp $JFC_DIST_PATH/jars/cobertura-1.9.4.1/cobertura.jar:$INSTRUMENTED_CLASSES:$AUT_CLASSES -Dnet.sourceforge.cobertura.datafile=cobertura.ser Project
-		fi
-	fi
-fi
-
 perl ./matrix-gen.perl
 
 echo
