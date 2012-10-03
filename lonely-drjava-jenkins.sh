@@ -2,19 +2,57 @@
 # This script rips and runs test cases on DrJava using GUITAR
 
 if [ -z $WORKSPACE ]; then
-	WORKSPACE='/var/lib/jenkins/workspace/phase2'
+	workspace='/var/lib/jenkins/workspace/phase2'
 fi
-AUT_PATH=$WORKSPACE'/drjava'
-AUT_BUILD_FILE=$AUT_PATH/'build.xml'
-AUT_BIN=$WORKSPACE'/aut_bin'
-AUT_INST=$WORKSPACE'/aut_inst'
-GUITAR_PATH=$WORKSPACE'/guitar'
-GUITAR_BUILD_FILE=$GUITAR_PATH'/build.xml'
-# AUT_PATH=`dirname $0`/trunk/dist/guitar/jfc-aut/RadioButton
-# AUT_CLASSES=$AUT_PATH/bin
-# INSTRUMENTED_CLASSES=`dirname $0`/trunk/dist/guitar/jfc-aut/RadioButton/instrumented-classes
-# JFC_DIST_PATH=`dirname $0`/trunk/dist/guitar
-# REPORTS_PATH=`dirname $0`/cobertura-reports
+scripts=$workspace'scripts'
+aut_path=$workspace'/drjava'
+aut_cp=$aut_path/'drjava.jar'
+cobertura_CP=$workspace'/cobertura/cobertura1.9.4.1/cobertura.jar'
+aut_build_file=$aut_path/'build.xml'
+aut_bin=$workspace'/aut_bin'
+aut_inst=$workspace'/aut_inst'
+guitar_path=$workspace'/guitar'
+guitar_build_file=$guitar_path'/build.xml'
+mainclass='edu.rice.cs.drjava.DrJava'
+configuration='$workspace/guitar-config/configuration.xml'
+intial_wait=2000
+# delay time between two events during ripping
+ripper_delay=500
+# the length of test suite
+tc_length=3
+# the maximum number of test case generated (0 means generate all)
+tc_no=$max_num_testcases
+# delay time between two events during replaying
+# this number is generally smaller than the $ripper_delay
+relayer_delay=200
+
+#------------------------
+# Output artifacts
+#------------------------
+
+# Directory to store all output of the workflow
+output_dir=$workspace'/output'
+# GUI structure file
+gui_file="$output_dir/DrJava.GUI"
+# EFG file
+efg_file="$output_dir/DrJava.EFG"
+# Log file for the ripper
+# You can examine this file to get the widget
+# signature to ignore during ripping
+log_file="$output_dir/DrJava.log"
+# Test case directory
+testcases_dir="$output_dir/testcases"
+# GUI states directory
+states_dir="$output_dir/states"
+# Replaying log directory
+logs_dir="$output_dir/logs"
+
+# Preparing output directories
+mkdir -p $output_dir
+mkdir -p $testcases_dir
+mkdir -p $states_dir
+mkdir -p $logs_dir
+
 
 usage()
 {
@@ -37,11 +75,11 @@ usage()
 		"
 }
 
-XFVB=true
-MAX_NUM_TESTCASES=2
-AUTO_RUN=true
-SKIP_RIPPING=false
-RUN_TESTS=true
+xvfb=true
+max_num_testcases=2
+auto_run=true
+skip_ripping=false
+run_tests=true
 while getopts ":h :x :m :c: :r :n" opt; do
   case $opt in
 	h)
@@ -52,16 +90,16 @@ while getopts ":h :x :m :c: :r :n" opt; do
 		XVFB=false
 		;;
 	c)
-		MAX_NUM_TESTCASES=$OPTARG
+		max_num_testcases=$OPTARG
 		;;
 	m)
-		AUTO_RUN=false
+		auto_run=false
 		;;
 	r)
-		SKIP_RIPPING=true
+		skip_ripping=true
 		;;
 	n)
-		RUN_TESTS=false
+		run_tests=false
 		;;
 	\?)
       echo "Invalid option: -$OPTARG" >&2
@@ -82,50 +120,50 @@ echo
 
 echo 'Checking for required software'
 # if ! java -version 2>&1 | grep 1.7 ; then PACKAGES+=' openjdk-7-jdk'; fi > /dev/null
-if ! which ant ; then PACKAGES+=' ant'; fi > /dev/null
-if ! which svn ; then PACKAGES+=' subversion'; fi > /dev/null
-if ! which xvfb-run ; then PACKAGES+=' xvfb'; fi > /dev/null
-if perl -e 'use XML::Simple;' 2>&1 | grep -q "Can't locate XML"; then PACKAGES+=' libxml-simple-perl'; fi
-if ! which cobertura-instrument ; then PACKAGES+=' cobertura'; fi > /dev/null
-if [ -n "$PACKAGES" ]; then
+if ! which ant ; then packages+=' ant'; fi > /dev/null
+if ! which svn ; then packages+=' subversion'; fi > /dev/null
+if ! which xvfb-run ; then packages+=' xvfb'; fi > /dev/null
+if perl -e 'use XML::Simple;' 2>&1 | grep -q "Can't locate XML"; then packages+=' libxml-simple-perl'; fi
+if ! which cobertura-instrument ; then packages+=' cobertura'; fi > /dev/null
+if [ -n "$packages" ]; then
 	echo 'Updating repositories and packages...'
 	sudo apt-get update > /dev/null && sudo apt-get -y upgrade > /dev/null
-	echo "Installing new packages: $PACKAGES"
-	sudo apt-get -y install $PACKAGES
+	echo "Installing new packages: $packages"
+	sudo apt-get -y install $packages
 fi
 echo
 ## END CHECKING FOR REQUIRED SOFTWARE
 
-if [ ! -d $WORKSPACE/cobertura ]; then
+if [ ! -d $workspace/cobertura ]; then
 	echo 'Updating cobertura.jar'
-	mkdir -p $WORKSPACE/cobertura
+	mkdir -p $workspace/cobertura
 	wget http://sourceforge.net/projects/cobertura/files/cobertura/1.9.4.1/cobertura-1.9.4.1-bin.tar.gz
-	tar -C $WORKSPACE/cobertura -xzf cobertura-1.9.4.1-bin.tar.gz
+	tar -C $workspace/cobertura -xzf cobertura-1.9.4.1-bin.tar.gz
 	rm -f cobertura-1.9.4.1-bin.tar.gz
 	rm -f $JFC_DIST_PATH/jars/cobertura.jar
 fi
 
-if [ ! -d $GUITAR_PATH ]; then
+if [ ! -d $guitar_path ]; then
 	echo 'Checking out GUITAR source'
-	mkdir -p $GUITAR_PATH
-	svn co https://guitar.svn.sourceforge.net/svnroot/guitar/trunk@3320 $GUITAR_PATH
+	mkdir -p $guitar_path
+	svn co https://guitar.svn.sourceforge.net/svnroot/guitar/trunk@3320 $guitar_path
 fi
 
-if [ ! -d $GUITAR_PATH/dist ]; then
+if [ ! -d $guitar_path/dist ]; then
 	echo 'Building the GUITAR target jfc.dist'
-	ant -f $GUITAR_BUILD_FILE jfc.dist
+	ant -f $guitar_build_file jfc.dist
 fi
 
 echo
 ## END BUILDING PROJECT
 
-if [ ! -d $AUT_PATH ]; then
+if [ ! -d $aut_path ]; then
 	echo 'Checking out AUT'
-	mkdir -p $AUT_PATH
-	svn co https://drjava.svn.sourceforge.net/svnroot/drjava/trunk/drjava@5686 $AUT_PATH
+	mkdir -p $aut_path
+	svn co https://drjava.svn.sourceforge.net/svnroot/drjava/trunk/drjava@5686 $aut_path
 fi
 
-if [ ! -d $AUT_PATH/classes ]; then
+if [ ! -d $aut_path/classes ]; then
 	echo 'Building AUT'
 	# DrJava needs the env JAVA7_HOME set
 	if uname -a | grep i386 ; then
@@ -134,15 +172,15 @@ if [ ! -d $AUT_PATH/classes ]; then
 		export JAVA7_HOME=/usr/lib/jvm/java-7-openjdk-amd64
 	fi
 
-	ant jar -f $AUT_BUILD_FILE
+	ant jar -f $aut_build_file
 fi
 
-if [ ! -d $AUT_INST ]; then
+if [ ! -d $aut_inst ]; then
 	echo 'Instrumenting classes'
-	mkdir -p $AUT_INST
+	mkdir -p $aut_inst
 
-	pushd $AUT_BIN
-	cp $AUT_PATH/drjava.jar .
+	pushd $aut_bin
+	cp $aut_path/drjava.jar .
 	jar xf drjava.jar
 	# This class doesn't have code line information. Cobertura cant' work with it
 	# We are removing it till a propper compilation solution is done
@@ -150,13 +188,80 @@ if [ ! -d $AUT_INST ]; then
 	rm drjava.jar
 	popd
 
-	cobertura-instrument --destination $AUT_INST $AUT_PATH/edu/rice/cs/drjava
+	cobertura-instrument --destination $aut_inst $aut_path/edu/rice/cs/drjava
 	cp cobertura.ser cobertura.ser.bkp
 fi
+
+if ! $skip_ripping; then
+	echo ""
+	echo "About to rip the application "
+	#read -p "Press ENTER to continue..."
+	cmd="$scripts/jfc-ripper.sh -cp $aut_cp -c $mainclass -g $gui_file -cf $configuration -d $ripper_delay -i $intial_wait -l $log_file"
+
+	echo $cmd
+	eval $cmd
+
+	# Converting GUI structure to EFG
+	echo ""
+	echo "About to convert GUI structure file to Event Flow Graph (EFG) file"
+	#read -p "Press ENTER to continue..."
+	cmd="$scripts/gui2efg.sh -g $gui_file -e $efg_file"
+	echo $cmd
+	eval $cmd
+
+	# Generating test cases
+	echo ""
+	echo "About to generate test cases to cover $tc_no $tc_length-way event interactions"
+
+	# -l: Interaction length
+	# -m: Number of test cases to generate, 0 for all possibile test cases.
+	cmd="$scripts/tc-gen-random.sh -e $efg_file -l $tc_length -m $tc_no -d $testcases_dir"
+	echo $cmd
+	eval $cmd
+fi
+
+
+echo "Output directory:  $output_dir"
+
 
 ## TEMPORARY EARLY EXIT. WIP STEP BY STEP :)
 exit 0
 ##################
+
+# Replaying generated test cases
+echo ""
+echo "About to replay test case(s)"
+echo "Enter the number of test case(s): "
+#read testcase_num
+testcase_num=$tc_no
+
+for testcase in `find $testcases_dir -name "*.tst"| sort -R| head -n$testcase_num`
+do
+	# getting the original cobertura.ser
+	rm cobertura.ser
+	cp cobertura.ser.bkp cobertura.ser
+
+	# getting test name
+	test_name=`basename $testcase`
+	test_name=${test_name%.*}
+
+	cmd="$JFC_DIST_PATH/jfc-replayer.sh -cp $aut_classpath -c  $mainclass -g $gui_file -e $efg_file -t $testcase -i $intial_wait -d $relayer_delay -l $logs_dir/$test_name.log -gs $states_dir/$test_name.sta -cf $configuration -ts"
+
+	# adding application arguments if needed
+	if [ ! -z $args ]
+	then
+		cmd="$cmd -a \"$args\" "
+	fi
+	echo $cmd
+	eval $cmd
+
+	echo 'Creating cobertura reports'
+	cobertura-report --basedir $AUT_CLASSES --format xml --destination $REPORTS_PATH
+	mv $REPORTS_PATH/coverage.xml $REPORTS_PATH/$test_name.xml
+	echo
+	## END CREATING COBERTURA REPORTS
+
+done
 
 common-inst.sh DrJava
 
@@ -192,8 +297,8 @@ echo
 ## END INSTRUMENTING CLASSES
 
 echo 'Running tests'
-if $RUN_TESTS; then
-	if $AUTO_RUN; then
+if $run_tests; then
+	if $auto_run; then
 		# First we clean the reports directory
 		rm -rf $REPORTS_PATH/*
 
