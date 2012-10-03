@@ -25,11 +25,6 @@ tc_no=$max_num_testcases
 # delay time between two events during replaying
 # this number is generally smaller than the $ripper_delay
 relayer_delay=200
-
-#------------------------
-# Output artifacts
-#------------------------
-
 # Directory to store all output of the workflow
 output_dir=$workspace'/output'
 # GUI structure file
@@ -119,7 +114,14 @@ echo
 ## END CHECKING FOR ADMINISTRATIVE PRIVILEGES
 
 echo 'Checking for required software'
-# if ! java -version 2>&1 | grep 1.7 ; then PACKAGES+=' openjdk-7-jdk'; fi > /dev/null
+if ! java -version 2>&1 | grep 1.7 ; then
+	PACKAGES+=' openjdk-7-jdk' > /dev/null
+	if which java ; then
+		sudo apt-get -y remove openjdk-6-jdk
+		sudo apt-get -y autoremove
+	fi
+fi
+
 if ! which ant ; then packages+=' ant'; fi > /dev/null
 if ! which svn ; then packages+=' subversion'; fi > /dev/null
 if ! which xvfb-run ; then packages+=' xvfb'; fi > /dev/null
