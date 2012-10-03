@@ -29,9 +29,8 @@
 function usage {
 	echo "Usage: `basename $0` -cp <aut classpath> [guitar arguments]"
 }
-base_dir=`dirname $0`
-guitar_lib=$base_dir/jars
-
+guitar_base_dir=$guitar_path
+guitar_lib=$guitar_base_dir/jars
 
 if [ $# -lt 1 ];
 then
@@ -67,20 +66,20 @@ done
 
 
 # Change GUITAR_OPTS variable to run with the clean log file
-GUITAR_OPTS="$GUITAR_OPTS -Dlog4j.configuration=log/guitar-clean.glc"
+guitar_opts="$guitar_opts -Dlog4j.configuration=$guitar_base_dir/log/guitar-clean.glc"
 
-if [ -z "$JAVA_CMD_PREFIX" ];
+if [ -z "$java_cmd_prefix" ];
 then
     # Run with clean log file
-    JAVA_CMD_PREFIX="java"
+    java_cmd_prefix="java"
 fi
 
 # Adds support for Xvfb
 if $XVFB; then
-	JAVA_CMD_PREFIX="xvfb-run -a java"
+	java_cmd_prefix="xvfb-run -a java"
 fi
 
-classpath=$base_dir:$guitar_classpath
+classpath=$guitar_base_dir:$guitar_classpath
 
 if [ ! -z $addtional_classpath ]
 then
@@ -89,6 +88,6 @@ else
 	classpath=$classpath
 fi
 
-RIPPER_CMD="$JAVA_CMD_PREFIX $GUITAR_OPTS -cp $classpath $ripper_launcher $guitar_args"
-exec $RIPPER_CMD
+ripper_cmd="$java_cmd_prefix $guitar_opts -cp $classpath $ripper_launcher $guitar_args"
+exec $ripper_cmd
 
