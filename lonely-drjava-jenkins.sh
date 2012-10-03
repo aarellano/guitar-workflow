@@ -203,6 +203,13 @@ if ! $skip_ripping; then
 	echo $cmd
 	eval $cmd
 
+echo "Output directory:  $output_dir"
+
+
+## TEMPORARY EARLY EXIT. WIP STEP BY STEP :)
+exit 0
+##################
+
 	# Converting GUI structure to EFG
 	echo ""
 	echo "About to convert GUI structure file to Event Flow Graph (EFG) file"
@@ -221,14 +228,6 @@ if ! $skip_ripping; then
 	echo $cmd
 	eval $cmd
 fi
-
-
-echo "Output directory:  $output_dir"
-
-
-## TEMPORARY EARLY EXIT. WIP STEP BY STEP :)
-exit 0
-##################
 
 # Replaying generated test cases
 echo ""
