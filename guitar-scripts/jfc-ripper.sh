@@ -68,17 +68,6 @@ done
 # Change GUITAR_OPTS variable to run with the clean log file
 guitar_opts="$guitar_opts -Dlog4j.configuration=$guitar_dist_base_dir/log/guitar-clean.glc"
 
-if [ -z "$java_cmd_prefix" ];
-then
-    # Run with clean log file
-    java_cmd_prefix="java"
-fi
-
-# Adds support for Xvfb
-if $XVFB; then
-	java_cmd_prefix="xvfb-run -a java"
-fi
-
 classpath=$guitar_dist_base_dir:$guitar_classpath
 
 if [ ! -z $addtional_classpath ]
@@ -91,6 +80,10 @@ fi
 if [ ! -d $workspace'/tmp' ]; then mkdir -p $workspace'/tmp'; fi
 
 rm -rf $workspace'/tmp/*'
-ripper_cmd="$java_cmd_prefix -Duser.home=$workspace/tmp $guitar_opts -cp $classpath $ripper_launcher $guitar_args"
-exec $ripper_cmd
+if $XVFB; then
+	xvfb-run -a java -Duser.home=$workspace/tmp $guitar_opts -cp $classpath $ripper_launcher $guitar_args
+else
+	java -Duser.home=$workspace/tmp $guitar_opts -cp $classpath $ripper_launcher $guitar_args
+fi
+
 
