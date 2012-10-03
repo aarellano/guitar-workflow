@@ -29,13 +29,24 @@
 	</IgnoredComponents> -->
 
 	<TerminalComponents>
-		<!-- Declare OK & Cancel as terminal components -->
+		<!-- Declare Save, OK and Cancel as terminal components -->
 		<FullComponent>
 			<Component>
 				<Attributes>
 					<Property>
 						<Name>Title</Name>
 						<Value>OK</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+
+		<FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>Save</Value>
 					</Property>
 				</Attributes>
 			</Component>
