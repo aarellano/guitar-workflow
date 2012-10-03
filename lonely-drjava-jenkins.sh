@@ -217,31 +217,24 @@ if ! $skip_ripping; then
 	# -l: Interaction length
 	# -m: Number of test cases to generate, 0 for all possibile test cases.
 	source $scripts/tc-gen-random.sh -e $efg_file -l $tc_length -m $tc_no -d $testcases_dir
-
-## TEMPORARY EARLY EXIT. WIP STEP BY STEP :)
-exit 0
-##################
-
 fi
 
 # Replaying generated test cases
 echo ""
 echo "About to replay test case(s)"
-echo "Enter the number of test case(s): "
-#read testcase_num
 testcase_num=$tc_no
 
 for testcase in `find $testcases_dir -name "*.tst"| sort -R| head -n$testcase_num`
 do
 	# getting the original cobertura.ser
-	rm cobertura.ser
-	cp cobertura.ser.bkp cobertura.ser
+	rm $workspace/cobertura.ser
+	cp $workspace/cobertura.ser.bkp $workspace/cobertura.ser
 
 	# getting test name
 	test_name=`basename $testcase`
 	test_name=${test_name%.*}
 
-	cmd="$JFC_DIST_PATH/jfc-replayer.sh -cp $aut_classpath -c  $mainclass -g $gui_file -e $efg_file -t $testcase -i $intial_wait -d $relayer_delay -l $logs_dir/$test_name.log -gs $states_dir/$test_name.sta -cf $configuration -ts"
+	cmd="$scripts/jfc-replayer.sh -cp $aut_classpath -c  $mainclass -g $gui_file -e $efg_file -t $testcase -i $intial_wait -d $relayer_delay -l $logs_dir/$test_name.log -gs $states_dir/$test_name.sta -cf $configuration -ts"
 
 	# adding application arguments if needed
 	if [ ! -z $args ]
@@ -252,29 +245,12 @@ do
 	eval $cmd
 
 	echo 'Creating cobertura reports'
-	cobertura-report --basedir $AUT_CLASSES --format xml --destination $REPORTS_PATH
-	mv $REPORTS_PATH/coverage.xml $REPORTS_PATH/$test_name.xml
+	cobertura-report --basedir $AUT_CLASSES --format xml --destination $reports_path
+	mv $reports_path/coverage.xml $reports_path/$test_name.xml
 	echo
 	## END CREATING COBERTURA REPORTS
 
 done
-
-common-inst.sh DrJava
-
-echo 'Updating scripts to run cobertura'
-
-echo 'Removing jfc-sample-workflow.sh'
-rm -f $JFC_DIST_PATH/jfc-sample-workflow.sh
-echo 'Removing jfc-replayer.sh'
-rm -f $JFC_DIST_PATH/jfc-replayer.sh
-echo 'Rmoving jfc-ripper.sh'
-rm -f $JFC_DIST_PATH/jfc-ripper.sh
-echo 'Copying new jfc-sample-workflow.sh'
-cp modified-scripts/jfc-sample-workflow.sh $JFC_DIST_PATH
-echo 'Copying new jfc-replayer.sh'
-cp modified-scripts/jfc-replayer.sh $JFC_DIST_PATH
-echo 'Copying new jfc-ripper.sh'
-cp modified-scripts/jfc-ripper.sh $JFC_DIST_PATH
 
 echo
 ## END REPLACING SCRIPTS
@@ -288,7 +264,6 @@ rm cobertura.ser # just in case
 cobertura-instrument --destination $INSTRUMENTED_CLASSES $AUT_CLASSES
 cp cobertura.ser cobertura.ser.bkp
 
-
 echo
 ## END INSTRUMENTING CLASSES
 
@@ -296,7 +271,7 @@ echo 'Running tests'
 if $run_tests; then
 	if $auto_run; then
 		# First we clean the reports directory
-		rm -rf $REPORTS_PATH/*
+		rm -rf $reports_path/*
 
 		. $JFC_DIST_PATH/jfc-sample-workflow.sh
 	else

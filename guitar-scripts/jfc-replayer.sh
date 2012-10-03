@@ -29,9 +29,6 @@ function usage {
    echo "Usage: `basename $0` -cp <aut classpath> [guitar arguments]"
 }
 
-base_dir=`dirname $0`
-guitar_lib=$base_dir/jars
-
 if [ $# -lt 1 ];
 then
    echo "Invalid parameter(s)"
@@ -76,24 +73,12 @@ else
 fi
 
 # Change GUITAR_OPTS variable to run with the clean log file
-GUITAR_OPTS="$GUITAR_OPTS -Dlog4j.configuration=log/guitar-clean.glc -Dnet.sourceforge.cobertura.datafile=cobertura.ser"
+guitar_opts="$guitar_opts -Dlog4j.configuration=log/guitar-clean.glc -Dnet.sourceforge.cobertura.datafile=cobertura.ser"
 
-if [ -z "$JAVA_CMD_PREFIX" ];
-then
-    JAVA_CMD_PREFIX="java"
-fi
-
-# Adds suport for xvfb
-if $XVFB;then
-   JAVA_CMD_PREFIX="xvfb-run -a java"
-fi
-
-# Adding support for Xvfb
 if $XVFB; then
-	JAVA_CMD_PREFIX="xvfb-run -a java"
+   xvfb-run -a java $guitar_opts -cp $classpath $replayer_launcher $guitar_args
+else
+   java $guitar_opts -cp $classpath $replayer_launcher $guitar_args
 fi
 
-REPLAYER_CMD="$JAVA_CMD_PREFIX $GUITAR_OPTS -cp $classpath $replayer_launcher $guitar_args"
-
-$REPLAYER_CMD
 exit $?
