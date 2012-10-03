@@ -22,7 +22,7 @@ intial_wait=2000
 # delay time between two events during ripping
 ripper_delay=500
 # the length of test suite
-tc_length=3
+tc_length=2
 # the maximum number of test case generated (0 means generate all)
 tc_no=$max_num_testcases
 # delay time between two events during replaying
@@ -209,11 +209,7 @@ if ! $skip_ripping; then
 	echo ""
 	echo "About to convert GUI structure file to Event Flow Graph (EFG) file"
 	#read -p "Press ENTER to continue..."
-	$scripts/gui2efg.sh -g $gui_file -e $efg_file
-
-## TEMPORARY EARLY EXIT. WIP STEP BY STEP :)
-exit 0
-##################
+	source $scripts/gui2efg.sh -g $gui_file -e $efg_file
 
 	# Generating test cases
 	echo ""
@@ -221,9 +217,12 @@ exit 0
 
 	# -l: Interaction length
 	# -m: Number of test cases to generate, 0 for all possibile test cases.
-	cmd="$scripts/tc-gen-random.sh -e $efg_file -l $tc_length -m $tc_no -d $testcases_dir"
-	echo $cmd
-	eval $cmd
+	source $scripts/tc-gen-random.sh -e $efg_file -l $tc_length -m $tc_no -d $testcases_dir
+
+## TEMPORARY EARLY EXIT. WIP STEP BY STEP :)
+exit 0
+##################
+
 fi
 
 # Replaying generated test cases
