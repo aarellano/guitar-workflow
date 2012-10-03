@@ -1,9 +1,11 @@
 #!/bin/bash
 # This script rips and runs test cases on DrJava using GUITAR
 
-if [ -z $WORKSPACE ]; then
-	workspace='/var/lib/jenkins/workspace/phase2'
+if [ -z $WORKSPACE ]
+	then workspace='/var/lib/jenkins/workspace/phase2'
+	else workspace=$WORKSPACE
 fi
+
 echo 'big workspace ' $WORKSPACE
 echo 'small workspace '$workspace
 
