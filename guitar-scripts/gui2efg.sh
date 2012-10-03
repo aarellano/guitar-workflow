@@ -8,7 +8,7 @@ done
 classpath=$classpath:$base_dir
 
 # Change GUITAR_OPTS variable to run with the clean log file
-GUITAR_OPTS="$GUITAR_OPTS -Dlog4j.configuration=log/guitar-clean.glc"
+guitar_opts="$guitar_opts -Dlog4j.configuration=log/guitar-clean.glc"
 
 JAVA_CMD_PREFIX="java"
 
@@ -19,7 +19,7 @@ then
 	classpath=`cygpath -wp $classpath`
 fi
 
-$JAVA_CMD_PREFIX $GUITAR_OPTS -cp $classpath $main_class  -p EFGConverter $@
+$JAVA_CMD_PREFIX $guitar_opts -cp $classpath $main_class  -p EFGConverter $@
 
 
 
