@@ -4,6 +4,9 @@
 if [ -z $WORKSPACE ]; then
 	workspace='/var/lib/jenkins/workspace/phase2'
 fi
+echo 'big workspace ' $WORKSPACE
+echo 'small workspace '$workspace
+
 scripts=$workspace'scripts'
 aut_path=$workspace'/drjava'
 aut_cp=$aut_path/'drjava.jar'
