@@ -201,12 +201,8 @@ if ! $skip_ripping; then
 	#read -p "Press ENTER to continue..."
 	source $scripts/jfc-ripper.sh -cp $aut_cp -c $mainclass -g $gui_file -cf $configuration -d $ripper_delay -i $intial_wait -l $log_file
 
-echo "Output directory:  $output_dir"
+	echo "Output directory:  $output_dir"
 
-
-## TEMPORARY EARLY EXIT. WIP STEP BY STEP :)
-exit 0
-##################
 
 	# Converting GUI structure to EFG
 	echo ""
@@ -215,6 +211,10 @@ exit 0
 	cmd="$scripts/gui2efg.sh -g $gui_file -e $efg_file"
 	echo $cmd
 	eval $cmd
+
+## TEMPORARY EARLY EXIT. WIP STEP BY STEP :)
+exit 0
+##################
 
 	# Generating test cases
 	echo ""
