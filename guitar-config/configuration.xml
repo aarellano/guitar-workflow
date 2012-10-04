@@ -1,40 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Configuration>
 
-<!-- 	<IgnoredComponents>
-		<FullComponent>
-			<Window>
-				<Attributes>
-					<Property>
-						<Name>Title</Name>
-						<Value>Radio Button Demo</Value>
-					</Property>
-				</Attributes>
-			</Window>
-
-			<Component>
-				<Attributes>
-					<Property>
-						<Name>Title</Name>
-						<Value>Gray</Value>
-					</Property>
-
-					<Property>
-						<Name>Class</Name>
-						<Value>javax.swing.JRadioButtonMenuItem</Value>
-					</Property>
-				</Attributes>
-			</Component>
-		</FullComponent>
-	</IgnoredComponents> -->
-
 	<IgnoredComponents>
 		<FullComponent>
 			<Component>
 				<Attributes>
 					<Property>
 						<Name>Title</Name>
-						<Value>File</Value>
+						<Value>Quit</Value>
 					</Property>
 				</Attributes>
 			</Component>
@@ -45,62 +18,7 @@
 				<Attributes>
 					<Property>
 						<Name>Title</Name>
-						<Value>Edit</Value>
-					</Property>
-				</Attributes>
-			</Component>
-		</FullComponent>
-
-		<FullComponent>
-			<Component>
-				<Attributes>
-					<Property>
-						<Name>Title</Name>
-						<Value>Tools</Value>
-					</Property>
-				</Attributes>
-			</Component>
-		</FullComponent>
-
-		<FullComponent>
-			<Component>
-				<Attributes>
-					<Property>
-						<Name>Title</Name>
-						<Value>Project</Value>
-					</Property>
-				</Attributes>
-			</Component>
-		</FullComponent>
-
-		<FullComponent>
-			<Component>
-				<Attributes>
-					<Property>
-						<Name>Title</Name>
-						<Value>Debugger</Value>
-					</Property>
-				</Attributes>
-			</Component>
-		</FullComponent>
-
-		<FullComponent>
-			<Component>
-				<Attributes>
-					<Property>
-						<Name>Title</Name>
-						<Value>Language Level</Value>
-					</Property>
-				</Attributes>
-			</Component>
-		</FullComponent>
-
-		<FullComponent>
-			<Component>
-				<Attributes>
-					<Property>
-						<Name>Title</Name>
-						<Value>Help</Value>
+						<Value>Force Quit</Value>
 					</Property>
 				</Attributes>
 			</Component>
@@ -138,6 +56,28 @@
 					<Property>
 						<Name>Title</Name>
 						<Value>Cancel</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+
+		<FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>Yes</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+
+		<FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>No</Value>
 					</Property>
 				</Attributes>
 			</Component>
