@@ -265,6 +265,7 @@ do
 
 done
 
+echo Generating the html matrix
 perl ./matrix-gen.perl
 
 echo
