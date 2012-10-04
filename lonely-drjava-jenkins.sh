@@ -184,6 +184,7 @@ fi
 if [ ! -d $aut_inst ]; then
 	echo 'Instrumenting classes'
 	mkdir -p $aut_inst
+	mkdir -p $aut_bin
 
 	pushd $aut_bin
 	cp $aut_path/drjava.jar .
