@@ -131,9 +131,13 @@ echo ""
 echo "About to replay test case(s)"
 echo "Enter the number of test case(s): "
 #read testcase_num
-testcase_num=$tc_no
+if [ -z $tc_no ]
+	testcase_num=1000000 # what a big number :)
+else
+	testcase_num=$tc_no
+fi
 
-for testcase in `find $testcases_dir -name "*.tst"| sort -R| head -n$testcase_num`
+for testcase in `find $testcases_dir -name "*.tst"| sort -R| head -n$testcase_num
 do
 	# getting the original cobertura.ser
 	rm cobertura.ser
