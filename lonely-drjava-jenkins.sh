@@ -200,8 +200,11 @@ fi
 
 if ! $skip_ripping; then
 	echo ""
-	echo "About to rip the application "
-	#read -p "Press ENTER to continue..."
+	echo "Ripping the application"
+
+	# Cleaning
+	rm -rf $gui_file $efg_file $testcases_dir/*
+
 	source $scripts/jfc-ripper.sh -cp $aut_cp -c $mainclass -g $gui_file -cf $configuration -d $ripper_delay -i $intial_wait -l $log_file
 
 	echo "Output directory:  $output_dir"
@@ -224,7 +227,15 @@ fi
 # Replaying generated test cases
 echo ""
 echo "About to replay test case(s)"
-testcase_num=$tc_no
+
+if [ -z $tc_no ]
+	testcase_num=1000000 # what a big number :)
+else
+	testcase_num=$tc_no
+fi
+
+# Cleaning
+rm -rf $reports_path/*
 
 for testcase in `find $testcases_dir -name "*.tst"| sort -R| head -n$testcase_num`
 do
