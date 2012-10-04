@@ -228,7 +228,7 @@ fi
 echo ""
 echo "About to replay test case(s)"
 
-if [ -z $tc_no ] ; then
+if [ $tc_no == 0 ] ; then
 	testcase_num=1000000 # what a big number :)
 else
 	testcase_num=$tc_no
