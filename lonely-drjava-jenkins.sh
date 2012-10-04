@@ -63,6 +63,7 @@ scripts=$workspace'/guitar-scripts'
 aut_path=$workspace'/drjava'
 aut_cp=$aut_path/'drjava.jar'
 cobertura_CP=$workspace'/cobertura/cobertura1.9.4.1/cobertura.jar'
+reports_path=$workspace'/cobertura-reports'
 aut_build_file=$aut_path/'build.xml'
 aut_bin=$workspace'/aut_bin'
 aut_inst=$workspace'/aut_inst'
@@ -104,6 +105,7 @@ mkdir -p $output_dir
 mkdir -p $testcases_dir
 mkdir -p $states_dir
 mkdir -p $logs_dir
+mkdir -p $reports_path
 
 echo 'Checking for administrative privileges'
 if ! groups | grep 'root\|admin\|sudo\|cluster' > /dev/null ; then
@@ -234,7 +236,7 @@ do
 	test_name=`basename $testcase`
 	test_name=${test_name%.*}
 
-	cmd="$scripts/jfc-replayer.sh -cp $aut_classpath -c  $mainclass -g $gui_file -e $efg_file -t $testcase -i $intial_wait -d $relayer_delay -l $logs_dir/$test_name.log -gs $states_dir/$test_name.sta -cf $configuration -ts"
+	cmd="$scripts/jfc-replayer.sh -cp $aut_cp -c  $mainclass -g $gui_file -e $efg_file -t $testcase -i $intial_wait -d $relayer_delay -l $logs_dir/$test_name.log -gs $states_dir/$test_name.sta -cf $configuration -ts"
 
 	# adding application arguments if needed
 	if [ ! -z $args ]
@@ -242,10 +244,10 @@ do
 		cmd="$cmd -a \"$args\" "
 	fi
 	echo $cmd
-	eval $cmd
+	source $cmd
 
 	echo 'Creating cobertura reports'
-	cobertura-report --basedir $AUT_CLASSES --format xml --destination $reports_path
+	cobertura-report --format xml --destination $reports_path
 	mv $reports_path/coverage.xml $reports_path/$test_name.xml
 	echo
 	## END CREATING COBERTURA REPORTS

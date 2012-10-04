@@ -4,17 +4,17 @@ use XML::Simple;
 use File::Basename;
 use File::Path qw(make_path);
 
-my $SCRIPT_PATH = dirname(__FILE__);
+my $script_path = dirname(__FILE__);
 my $simple = XML::Simple->new (ForceArray => 1, KeepRoot => 1);
 
-$COBERTURA_REPORTS=$SCRIPT_PATH . '/cobertura-reports/';
+$cobertura_reports=$script_path . '/cobertura-reports/';
 make_path('reports/html');
-$MATRIX_FILE=$SCRIPT_PATH . '/reports/html/matrix.html';
+$matrix_file=$script_path . '/reports/html/matrix.html';
 $table = '<table border="1">';
 
-opendir(my $dh, $COBERTURA_REPORTS) || die;
-unlink $MATRIX_FILE;
-open(my $fh, '>>', $MATRIX_FILE) || die;
+opendir(my $dh, $cobertura_reports) || die;
+unlink $matrix_file;
+open(my $fh, '>>', $matrix_file) || die;
 
 print $fh '<html><head><title>Coverage matrix</title></head><body>';
 
@@ -24,7 +24,7 @@ while(readdir $dh) {
 
 	if ($_ ne '.' && $_ ne '..') {
 
-		$path = $COBERTURA_REPORTS . "$_";
+		$path = $cobertura_reports . "$_";
 		my $data = $simple->XMLin($path);
 		$class = $data->{coverage}->[0]->{packages}->[0]->{package}->{''}->{classes}->[0]->{class};
 

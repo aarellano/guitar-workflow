@@ -80,5 +80,3 @@ if $XVFB; then
 else
    java $guitar_opts -cp $classpath $replayer_launcher $guitar_args
 fi
-
-exit $?
