@@ -190,11 +190,11 @@ if [ ! -d $aut_inst ]; then
 	jar xf drjava.jar
 	# This class doesn't have code line information. Cobertura cant' work with it
 	# We are removing it till a propper compilation solution is done
-	rm edu/rice/cs/drjava/model/compiler/CompilerOptions\$1.class
+	rm edu/rice/cs/drjava/model/compiler/CompilerOptions*
 	rm drjava.jar
 	popd
 
-	cobertura-instrument --destination $aut_inst $aut_path/edu/rice/cs/drjava
+	cobertura-instrument --destination $aut_inst $aut_bin/edu/rice/cs/drjava
 	cp cobertura.ser cobertura.ser.bkp
 fi
 
