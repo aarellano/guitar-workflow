@@ -237,8 +237,14 @@ fi
 # Cleaning
 rm -rf $reports_path/*
 
+source $workspace/progress_bar.sh
+counter=0
+total=`ls -l $testcases_dir | wc -l`
+
 for testcase in `find $testcases_dir -name "*.tst"| sort -R| head -n$testcase_num`
 do
+	progress_bar $counter++ $total
+
 	# getting the original cobertura.ser
 	rm $workspace/cobertura.ser
 	cp $workspace/cobertura.ser.bkp $workspace/cobertura.ser
@@ -254,15 +260,10 @@ do
 	then
 		cmd="$cmd -a \"$args\" "
 	fi
-	echo $cmd
-	source $cmd
+	source $cmd > /dev/null
 
-	echo 'Creating cobertura reports'
-	cobertura-report --format xml --destination $reports_path
+	cobertura-report --format xml --destination $reports_path > /dev/null
 	mv $reports_path/coverage.xml $reports_path/$test_name.xml
-	echo
-	## END CREATING COBERTURA REPORTS
-
 done
 
 perl ./matrix-gen.perl
