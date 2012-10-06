@@ -184,6 +184,7 @@ fi
 if [ ! -d $aut_inst ]; then
 	echo 'Instrumenting classes'
 	mkdir -p $aut_inst
+	rm -rf $aut_inst/*
 
 	pushd $aut_bin
 	cp $aut_path/drjava.jar .
@@ -228,22 +229,22 @@ fi
 echo ""
 echo "About to replay test case(s)"
 
-if [ -z $tc_no ]
-	testcase_num=1000000 # what a big number :)
-else
-	testcase_num=$tc_no
+if [ -z $tc_no ]; then
+		testcase_num=1000000 # what a big number :)
+	else
+		testcase_num=$tc_no
 fi
 
 # Cleaning
 rm -rf $reports_path/*
 
-source $workspace/progress_bar.sh
+
 counter=0
 total=`ls -l $testcases_dir | wc -l`
 
 for testcase in `find $testcases_dir -name "*.tst"| sort -R| head -n$testcase_num`
 do
-	progress_bar $counter++ $total
+	source $workspace/progress_bar.sh $counter++ $total
 
 	# getting the original cobertura.ser
 	rm $workspace/cobertura.ser
