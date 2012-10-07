@@ -238,12 +238,13 @@ fi
 rm -rf $reports_path/*
 
 counter=0
-. $workspace/progress_bar.sh
+# . $workspace/progress_bar.sh
 for testcase in `find $testcases_dir -name "*.tst"| sort -R| head -n$testcase_num`
 do
 	counter=$[$counter+1]
-	# echo 'replaying test case # '$counter
-	progress_bar $counter $total
+	echo 'replaying test case # '$counter
+	# The progress bar doesn't work in jenkins. Disabled :P
+	# progress_bar counter=$[$counter + 1] $total
 
 	# getting the original cobertura.ser
 	rm $workspace/cobertura.ser
@@ -260,9 +261,9 @@ do
 	then
 		cmd="$cmd -a \"$args\" "
 	fi
-	source $cmd > /dev/null
+	source $cmd 2>&1 > /dev/null
 
-	cobertura-report --format xml --destination $reports_path > /dev/null
+	cobertura-report --format xml --destination $reports_path 2>&1 > /dev/null
 
 	if [ $counter == 1 ]; then
 		perl ./util/matrix-gen.perl 0 $test_name
