@@ -7,9 +7,9 @@ use File::Path qw(make_path);
 my $script_path = dirname(__FILE__);
 my $simple = XML::Simple->new (ForceArray => 1, KeepRoot => 1);
 
-$cobertura_report_file=$script_path . '/cobertura-reports/coverage.xml';
+$cobertura_report_file=$script_path . '/../cobertura-reports/coverage.xml';
 make_path('reports/html');
-$matrix_file=$script_path . '/reports/html/matrix.html';
+$matrix_file=$script_path . '/../reports/html/matrix.html';
 $table = '<table border="1">';
 
 $first_row = 0;

@@ -226,8 +226,7 @@ if ! $skip_ripping; then
 fi
 
 # Replaying generated test cases
-echo ""
-echo "About to replay test case(s)"
+echo "Replaying test cases:"
 
 if [ -z $tc_no ]; then
 		testcase_num=1000000 # what a big number :)
@@ -238,13 +237,12 @@ fi
 # Cleaning
 rm -rf $reports_path/*
 
-
 counter=0
 total=`ls -l $testcases_dir | wc -l`
-
+. $workspace/progress_bar.sh
 for testcase in `find $testcases_dir -name "*.tst"| sort -R| head -n$testcase_num`
 do
-	source $workspace/progress_bar.sh $counter++ $total
+	lib_progress_bar counter=$[$counter + 1] $total
 
 	# getting the original cobertura.ser
 	rm $workspace/cobertura.ser
@@ -265,9 +263,9 @@ do
 
 	cobertura-report --format xml --destination $reports_path 2>&1 > /dev/null
 
-	if [ $counter == 1]
+	if [ $counter == 1 ]; then
 		perl ./util/matrix-gen.perl 0
-	elif [ $counter == $total]
+	elif[ $counter == $total ]; then
 		perl ./util/matrix-gen.perl 2
 	else
 		perl ./util/matrix-gen.perl 1
