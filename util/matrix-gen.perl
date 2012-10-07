@@ -10,7 +10,6 @@ my $simple = XML::Simple->new (ForceArray => 1, KeepRoot => 1);
 $cobertura_report_file=$script_path . '/../cobertura-reports/coverage.xml';
 make_path('reports/html');
 $matrix_file=$script_path . '/../reports/html/matrix.html';
-$table = '<table border="1">';
 
 $first_row = 0;
 $last_row = 0;
@@ -29,6 +28,7 @@ print $fh '<html><head><title>Coverage matrix</title></head><body>';
 my $data = $simple->XMLin($cobertura_report_file);
 $package = $data->{coverage}->[0]->{packages}->[0]->{package};
 if ($first_row) {
+	$table = '<table border="1">';
 	$table .= '<tr><th rowspan=2>Class/Line/Testcase</th>';
 	foreach $p (keys %$package)
 	{
@@ -50,7 +50,7 @@ if ($first_row) {
 	$table .= '<tr>' . $lines_row . '</tr>'
 }
 
-$table .= '<tr><td>' . $_ . '</td>';
+$table .= '<tr><td>' . @ARGV[1] . '</td>';
 
 foreach $p (keys %$package)
 {
@@ -67,6 +67,8 @@ foreach $p (keys %$package)
 }
 $table .= '</tr>';
 
-print $fh '</table></body></html>';
+if ($last_row) {
+	print $fh '</table></body></html>';
+}
 print $fh $table;
 close $fh;
