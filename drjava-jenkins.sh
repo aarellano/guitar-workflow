@@ -265,7 +265,7 @@ do
 
 	if [ $counter == 1 ]; then
 		perl ./util/matrix-gen.perl 0
-	elif[ $counter == $total ]; then
+	elif [ $counter == $total ]; then
 		perl ./util/matrix-gen.perl 2
 	else
 		perl ./util/matrix-gen.perl 1
