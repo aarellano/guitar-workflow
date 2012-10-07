@@ -242,7 +242,7 @@ total=`ls -l $testcases_dir | wc -l`
 . $workspace/progress_bar.sh
 for testcase in `find $testcases_dir -name "*.tst"| sort -R| head -n$testcase_num`
 do
-	lib_progress_bar counter=$[$counter + 1] $total
+	progress_bar counter=$[$counter + 1] $total
 
 	# getting the original cobertura.ser
 	rm $workspace/cobertura.ser
