@@ -238,7 +238,7 @@ fi
 rm -rf $reports_path/*
 
 counter=0
-. $workspace/progress_bar.sh
+# . $workspace/progress_bar.sh
 for testcase in `find $testcases_dir -name "*.tst"| sort -R| head -n$testcase_num`
 do
 	counter=$[$counter+1]
