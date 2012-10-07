@@ -261,14 +261,17 @@ do
 	then
 		cmd="$cmd -a \"$args\" "
 	fi
-	source $cmd > /dev/null
+	source $cmd 2>&1 > /dev/null
 
-	cobertura-report --format xml --destination $reports_path > /dev/null
-	mv $reports_path/coverage.xml $reports_path/$test_name.xml
+	cobertura-report --format xml --destination $reports_path 2>&1 > /dev/null
+
+	if [ $counter == 1]
+		perl ./util/matrix-gen.perl 0
+	elif [ $counter == $total]
+		perl ./util/matrix-gen.perl 2
+	else
+		perl ./util/matrix-gen.perl 1
+	fi
+
+	rm $reports_path/coverage.xml
 done
-
-perl ./matrix-gen.perl
-
-echo
-echo LINK TO THE HTML MATRIX: file://`dirname $0`/reports/html/matrix.html
-echo
