@@ -59,6 +59,7 @@ fi
 #
 # GUITAR classpath
 #
+guitar_classpath=""
 for file in `find $guitar_lib/ -name "*.jar"`
 do
    guitar_classpath=${file}:${guitar_classpath}
@@ -73,7 +74,7 @@ else
 fi
 
 # Change GUITAR_OPTS variable to run with the clean log file
-guitar_opts="$guitar_opts -Dlog4j.configuration=log/guitar-clean.glc -Dnet.sourceforge.cobertura.datafile=cobertura.ser"
+guitar_opts="-Dlog4j.configuration=log/guitar-clean.glc -Dnet.sourceforge.cobertura.datafile=cobertura.ser"
 
 if $XVFB; then
    xvfb-run -a java $guitar_opts -cp $classpath $replayer_launcher $guitar_args

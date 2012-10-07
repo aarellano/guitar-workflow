@@ -267,7 +267,7 @@ do
 
 	if [ $counter == 1 ]; then
 		perl ./util/matrix-gen.perl 0 $test_name
-	elif [ $counter == $testcase_num ]; then
+	elif [ $counter == $((testcase_num + 1)) ]; then
 		perl ./util/matrix-gen.perl 2 $test_name
 	else
 		perl ./util/matrix-gen.perl 1 $test_name
