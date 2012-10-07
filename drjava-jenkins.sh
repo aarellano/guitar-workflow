@@ -187,7 +187,6 @@ if ! groups | grep 'root\|admin\|sudo\|cluster' > /dev/null ; then
 else
 	echo 'OK'
 fi
-echo
 ## END CHECKING FOR ADMINISTRATIVE PRIVILEGES
 
 echo 'Checking for required software'
@@ -209,8 +208,9 @@ if [ -n "$packages" ]; then
 	sudo apt-get update > /dev/null && sudo apt-get -y upgrade > /dev/null
 	echo "Installing new packages: $packages"
 	sudo apt-get -y install $packages
+else
+	echo 'OK'
 fi
-echo
 ## END CHECKING FOR REQUIRED SOFTWARE
 
 if [ ! -d $workspace/cobertura ]; then
@@ -232,8 +232,6 @@ if [ ! -d $guitar_path/dist ]; then
 	echo 'Building the GUITAR target jfc.dist'
 	ant -f $guitar_build_file jfc.dist
 fi
-
-echo
 ## END BUILDING PROJECT
 
 if [ ! -d $aut_path ]; then
@@ -301,8 +299,10 @@ fi
 # Replaying generated test cases
 echo "Replaying test cases:"
 
-if [ -z $tc_no ]; then
-		testcase_num=1000000 # what a big number :)
+total=`ls -l $testcases_dir | wc -l`
+
+if [ $tc_no == 0 ]; then
+		testcase_num=$total # what a big number :)
 	else
 		testcase_num=$tc_no
 fi
@@ -311,7 +311,6 @@ fi
 rm -rf $reports_path/*
 
 counter=0
-total=`ls -l $testcases_dir | wc -l`
 for testcase in `find $testcases_dir -name "*.tst"| sort -R| head -n$testcase_num`
 do
 	progress_bar counter=$[$counter + 1] $total
@@ -336,11 +335,11 @@ do
 	cobertura-report --format xml --destination $reports_path 2>&1 > /dev/null
 
 	if [ $counter == 1 ]; then
-		perl ./util/matrix-gen.perl 0
-	elif [ $counter == $total ]; then
-		perl ./util/matrix-gen.perl 2
+		perl ./util/matrix-gen.perl 0 $test_name
+	elif [ $counter == $testcase_num ]; then
+		perl ./util/matrix-gen.perl 2 $test_name
 	else
-		perl ./util/matrix-gen.perl 1
+		perl ./util/matrix-gen.perl 1 $test_name
 	fi
 
 	rm $reports_path/coverage.xml
