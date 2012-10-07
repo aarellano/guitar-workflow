@@ -18,8 +18,9 @@ $last_row = 0;
 if (@ARGV[0] == 0) {
 	unlink $matrix_file;
 	$first_row = 1;
-} elsif (@ARGV[0] == 2)
+} elsif (@ARGV[0] == 2) {
 	$last_row = 1;
+}
 
 open(my $fh, '>>', $matrix_file) || die;
 
