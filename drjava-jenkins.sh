@@ -128,6 +128,8 @@ fi
 if ! which ant ; then packages+=' ant'; fi > /dev/null
 if ! which svn ; then packages+=' subversion'; fi > /dev/null
 if ! which xvfb-run ; then packages+=' xvfb'; fi > /dev/null
+if ! which mysqld ; then packages+=' mysql-server'; fi > /dev/null
+if ! which ruby1.9 ; then packages+=' ruby1.9.1-full' ; fi > /dev/null
 if perl -e 'use XML::Simple;' 2>&1 | grep -q "Can't locate XML"; then packages+=' libxml-simple-perl'; fi
 if ! which cobertura-instrument ; then packages+=' cobertura'; fi > /dev/null
 if [ -n "$packages" ]; then
@@ -264,14 +266,6 @@ do
 	source $cmd 2>&1 > /dev/null
 
 	cobertura-report --format xml --destination $reports_path 2>&1 > /dev/null --datafile $workspace/cobertura.ser
-
-	if [ $counter == 1 ]; then
-		perl $workspace/util/matrix-gen.perl 0 $test_name
-	elif [ $counter == $((testcase_num + 1)) ]; then
-		perl $workspace/util/matrix-gen.perl 2 $test_name
-	else
-		perl $workspace/util/matrix-gen.perl 1 $test_name
-	fi
-
+	ruby $workspace/util/matrix-gen.rb
 	rm $reports_path/coverage.xml
 done
