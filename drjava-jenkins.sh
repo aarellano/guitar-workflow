@@ -263,14 +263,14 @@ do
 	fi
 	source $cmd 2>&1 > /dev/null
 
-	cobertura-report --format xml --destination $reports_path 2>&1 > /dev/null
+	cobertura-report --format xml --destination $reports_path 2>&1 > /dev/null --datafile $workspace/cobertura.ser
 
 	if [ $counter == 1 ]; then
-		perl ./util/matrix-gen.perl 0 $test_name
+		perl $workspace/util/matrix-gen.perl 0 $test_name
 	elif [ $counter == $((testcase_num + 1)) ]; then
-		perl ./util/matrix-gen.perl 2 $test_name
+		perl $workspace/util/matrix-gen.perl 2 $test_name
 	else
-		perl ./util/matrix-gen.perl 1 $test_name
+		perl $workspace/util/matrix-gen.perl 1 $test_name
 	fi
 
 	rm $reports_path/coverage.xml
