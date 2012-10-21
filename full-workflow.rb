@@ -65,6 +65,8 @@ end
 if ! File.directory? guitar_jfc
 	p 'Building the GUITAR target jfc.dist'
 	`ant -f #{guitar_build_file} jfc.dist`
+	# This jar is outdated, and causes problems if not removed
+	FileUtils.rm_rf  "#guitar_jfc/jars/cobertura.jar"
 end
 
 if ! File.directory? aut_root
@@ -82,8 +84,6 @@ if ! File.directory? aut_bin
 		ENV['JAVA7_HOME'] = '/usr/lib/jvm/java-7-openjdk-amd64'
 	end
 	`ant jar -f #{aut_build_file}`
-	# This jar is outdated, and causes problems if not removed
-	FileUtils.rm_rf  "#guitar_jfc/jars/cobertura.jar"
 end
 
 if ! File.directory? aut_inst
