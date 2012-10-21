@@ -19,12 +19,11 @@ opts = Trollop::options do
 	where [options] are:
 	EOS
 
-	opt :xvfb, "By default this script uses xvfb to perform all graphical operations in memory. If this flag is set, then the graphics will be shown on a standard X11 server", default: true
-	opt :replays, "Maximum number of test cases to write and replay. If 0 all the test cases are run.	By default is set to 2", default: 2
-	opt :auto, "If this flag is unset, then the software will be replayed manually (no automated test cases)."
-	opt :rip, "This option enables skipping the ripping stage", default: false
-	opt :dev_mode, "This option uses a development table when writing to the database. It is true by default", default: true
-	opt :test, "Setting this flag, no tests will be run. False by default", default: false
+	opt :xvfb, "By default xvfb is used to perform all graphical operations in memory. If disabled, the graphics will be shown on a standard X11 server", default: true
+	opt :replays, "Maximum number of test cases to write and replay. If 0 all the test cases are run. If -1 no test cases are run", default: -1
+	opt :rip, "This option enables ripping the AUT", default: false
+	opt :dev, "This option uses a development table when writing to the database.", default: true
+	opt :manual, "With this option the AUT can be run manually, without automated tests"
 end
 
 workspace = "/var/lib/jenkins/workspace/phase2" if ! ENV['WORKSPACE']
@@ -55,7 +54,7 @@ ripper_delay = 500
 tc_length = 2
 relayer_delay = 200
 
-table_name = opts.dev_mode ? "coverage_devmode" : "coverage_#{Time.now.strftime("%Y%m%d%H%M%S")}"
+table_name = opts.dev ? "coverage_devmode" : "coverage_#{Time.now.strftime("%Y%m%d%H%M%S")}"
 
 if ! File.directory? guitar_root
 	p 'Checking out GUITAR source'
@@ -125,30 +124,42 @@ if opts.rip
 end
 
 
-p "Replaying test cases"
-create_table(table_name)
-total = `ls -l $testcases_dir | wc -l`
-testcase_num = opts.replays == 0 ? total : opts.replays
-FileUtils.rm_rf reports + '/*'
-counter = 0
+if opts.replays >= 0
+	p "Replaying test cases"
+	create_table(table_name)
+	total = `ls -l $testcases_dir | wc -l`
+	testcase_num = opts.replays == 0 ? total : opts.replays
+	FileUtils.rm_rf reports + '/*'
+	counter = 0
 
-Dir[testcases_dir + '/*.tst'].first(testcase_num).each do |tc|
-	counter += 1
-	p "Running test case #{counter}"
+	Dir[testcases_dir + '/*.tst'].first(testcase_num).each do |tc|
+		counter += 1
+		p "Running test case #{counter}"
 
-	FileUtils.rm "#{workspace}/cobertura.ser"
-	FileUtils.cp "#{workspace}/cobertura.ser.bkp", "cobertura.ser"
+		FileUtils.rm "#{workspace}/cobertura.ser"
+		FileUtils.cp "#{workspace}/cobertura.ser.bkp", "cobertura.ser"
 
-	test_name = File.basename(tc, '.*')
-	guitar_opts="-Dlog4j.configuration=log/guitar-clean.glc -Dnet.sourceforge.cobertura.datafile=cobertura.ser"
-	guitar_args = "-c #{aut_mainclass} -g #{gui_file} -e #{efg_file} -t #{tc} -i #{intial_wait} -d #{relayer_delay} -l #{logs_dir}/#{test_name}.log -gs #{states_dir}/#{test_name}.sta -cf #{aut_config}"
-	if opts.xvfb
-		`xvfb-run -a java #{guitar_opts} -cp #{classpath} edu.umd.cs.guitar.replayer.JFCReplayerMain #{guitar_args}`
-	else
-		`java #{guitar_opts} -cp #{classpath} edu.umd.cs.guitar.replayer.JFCReplayerMain #{guitar_args}`
+		test_name = File.basename(tc, '.*')
+		guitar_opts="-Dlog4j.configuration=log/guitar-clean.glc -Dnet.sourceforge.cobertura.datafile=cobertura.ser"
+		guitar_args = "-c #{aut_mainclass} -g #{gui_file} -e #{efg_file} -t #{tc} -i #{intial_wait} -d #{relayer_delay} -l #{logs_dir}/#{test_name}.log -gs #{states_dir}/#{test_name}.sta -cf #{aut_config}"
+		if opts.xvfb
+			`xvfb-run -a java #{guitar_opts} -cp #{classpath} edu.umd.cs.guitar.replayer.JFCReplayerMain #{guitar_args}`
+		else
+			`java #{guitar_opts} -cp #{classpath} edu.umd.cs.guitar.replayer.JFCReplayerMain #{guitar_args}`
+		end
+
+		`cobertura-report --format xml --destination #{workspace} 2>&1 > /dev/null --datafile #{workspace}/cobertura.ser`
+		write_coverage(test_name, workspace + '/coverage.xml', table_name)
+		FileUtils.rm "#{workspace}/coverage.xml"
 	end
+end
+
+if opts.manual
+	p "Manually running the AUT"
+	create_table(table_name)
+	`java #{guitar_opts} -cp #{classpath} edu.umd.cs.guitar.replayer.JFCReplayerMain #{guitar_args}`
 
 	`cobertura-report --format xml --destination #{workspace} 2>&1 > /dev/null --datafile #{workspace}/cobertura.ser`
 	write_coverage(test_name, workspace + '/coverage.xml', table_name)
- 	FileUtils.rm "#{workspace}/coverage.xml"
+	FileUtils.rm "#{workspace}/coverage.xml"
 end
