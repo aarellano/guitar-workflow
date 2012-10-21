@@ -28,7 +28,6 @@ opts = Trollop::options do
 end
 
 workspace = "/var/lib/jenkins/workspace/phase2" if ! ENV['WORKSPACE']
-scripts = "#{workspace}/guitar-scripts"
 aut_root = "#{workspace}/drjava"
 aut_cp = "#{aut_root}/drjava.jar"
 aut_src = "#{aut_root}/src"
