@@ -8,6 +8,13 @@ def create_table(table_name)
   dbh.close if dbh
 end
 
+def create_faults_table(table_name)
+  dbh = get_dbh
+  dbh.query("DROP TABLE IF EXISTS #{table_name}")
+  dbh.query("CREATE TABLE #{table_name}(fault INT, testcase VARCHAR(100), detection BOOL, PRIMARY KEY (fault, testcase))")
+  dbh.close if dbh
+end
+
 def write_coverage(testcase, xml_file, table_name)
   dbh = get_dbh
 
@@ -33,4 +40,10 @@ def get_dbh()
     puts "Error message: #{e.error}"
     puts "Error SQLSTATE: #{e.sqlstate}" if e.respond_to?("sqlstate")
   end
+end
+
+def get_relevant_testcases(coverage_table, package, class_name, line)
+  dbh = get_dbh
+  p "SELECT testcase FROM #{coverage_table} WHERE (package = '#{package}' AND class = '#{class_name}' AND line = #{line} AND hits > 0)"
+  return dbh.query "SELECT testcase FROM #{coverage_table} WHERE (package = '#{package}' AND class = '#{class_name}' AND line = #{line} AND hits > 0)"
 end
