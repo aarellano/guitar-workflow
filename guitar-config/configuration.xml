@@ -7,6 +7,83 @@
 				<Attributes>
 					<Property>
 						<Name>Title</Name>
+						<Value>File</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+
+		<FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>Edit</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+
+		<FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>Tools</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+
+		<FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>Project</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+
+		<FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>Debugger</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+
+		<FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>Language Level</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+
+		<FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
+						<Value>Help</Value>
+					</Property>
+				</Attributes>
+			</Component>
+		</FullComponent>
+
+		<FullComponent>
+			<Component>
+				<Attributes>
+					<Property>
+						<Name>Title</Name>
 						<Value>Quit</Value>
 					</Property>
 				</Attributes>
