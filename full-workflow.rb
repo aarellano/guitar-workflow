@@ -31,7 +31,7 @@ opts = Trollop::options do
 	opt :workspace, "This is the path to be used as the workspace. It overrides the environment var WORKSPACE used by Jenkins", type: :string
 end
 
-workspace = opts.workspace ? opt.workspace : (ENV['WORKSPACE'] ? ENV['WORKSPACE'] : Dir.pwd)
+workspace = opts.workspace ? opts.workspace : (ENV['WORKSPACE'] ? ENV['WORKSPACE'] : Dir.pwd)
 aut_name = "drjava"
 aut_root = "#{workspace}/drjava"
 aut_cp = "#{aut_root}/drjava.jar"
@@ -185,7 +185,7 @@ if opts.faults
 
 	faulty_classpath = "#{aut_inst}:#{cobertura_cp}:#{faulty_root}/drjava.jar"
 	Dir["#{guitar_jfc_lib}/**/*.jar"].each { |jar| faulty_classpath << ':' + jar }
-	create_faults_table("faults")
+	create_faults_table(faults_table)
 
 	IO.readlines(opts.faults_file).each_with_index do |line, f_n|
 		p "Seeding fault number #{f_n + 1}"

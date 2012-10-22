@@ -49,6 +49,6 @@ end
 
 def write_fault(testcase, fault_number, detection, table_name)
   dbh = get_dbh
-  dbh.query "INSERT INTO #{table_name} (fault, testcase, detection) VALUES ('#{testcase}', #{fault_number}, #{detection})"
+  dbh.query "INSERT INTO #{table_name} (fault, testcase, detection) VALUES (#{fault_number}, '#{testcase}', #{detection})"
   dbh.close if dbh
 end
