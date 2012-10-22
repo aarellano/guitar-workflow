@@ -124,7 +124,7 @@ if opts.rip
 	`java #{guitar_opts} -cp #{classpath} edu.umd.cs.guitar.graph.GUIStructure2GraphConverter -p EFGConverter -g #{gui_file} -e #{efg_file}`
 end
 
-if opts.wtc > 0
+if opts.wtc >= 0
 	p "Generating test cases to cover #{opts.wtc} #{tc_length}-way event interactions"
 	`rm -rf #{testcases_dir}/*`
 	`java #{guitar_opts} -cp #{classpath} edu.umd.cs.guitar.testcase.TestCaseGenerator -p RandomSequenceLengthCoverage -e #{efg_file} -l #{tc_length} -m #{opts.wtc} -d #{testcases_dir}`
