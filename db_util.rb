@@ -1,7 +1,7 @@
 require 'mysql'
 require 'nokogiri'
 
-def create_table(table_name)
+def create_coverage_table(table_name)
   dbh = get_dbh
   dbh.query("DROP TABLE IF EXISTS #{table_name}")
   dbh.query("CREATE TABLE #{table_name}(testcase VARCHAR(100), package VARCHAR(100), class VARCHAR(100), line INT, hits INT, PRIMARY KEY (testcase, package, class, line))")
@@ -44,6 +44,11 @@ end
 
 def get_relevant_testcases(coverage_table, package, class_name, line)
   dbh = get_dbh
-  p "SELECT testcase FROM #{coverage_table} WHERE (package = '#{package}' AND class = '#{class_name}' AND line = #{line} AND hits > 0)"
   return dbh.query "SELECT testcase FROM #{coverage_table} WHERE (package = '#{package}' AND class = '#{class_name}' AND line = #{line} AND hits > 0)"
+end
+
+def write_fault(testcase, fault_number, detection, table_name)
+  dbh = get_dbh
+  dbh.query "INSERT INTO #{table_name} (fault, testcase, detection) VALUES ('#{testcase}', #{fault_number}, #{detection})"
+  dbh.close if dbh
 end

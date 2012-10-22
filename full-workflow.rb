@@ -23,10 +23,11 @@ opts = Trollop::options do
 	opt :replays, "Maximum number of test cases to write and replay. If 0 all the test cases are run. If -1 no test cases are run", default: -1
 	opt :rip, "This option enables ripping the AUT", default: false
 	opt :wtc, "Number of test cases to write from the EFG. If 0 then all the possible TC are written. If -1 no test cases are written. All the previous test cases are discarted", default: -1
-	opt :dev, "This option uses a development table when writing to the database.", default: true
+	opt :dev, "This option uses a development table when writing coverages and faults to database.", default: true
 	opt :manual, "With this option the AUT can be run manually, without automated tests"
 	opt :faults, "This flag enable the fault matrix generation", default: false
 	opt :faults_file, "This file should have all the faults", type: :string
+	opt :coverage_table, "This option can be used to specify the name of an already created coverage matrix (table) when running the faulty versions. This name is used even in dev mode -dev"
 end
 
 workspace = ENV['WORKSPACE'] ? ENV['WORKSPACE'] : "/var/lib/jenkins/workspace/phase2"
@@ -41,7 +42,6 @@ aut_inst = "#{workspace}/aut_inst"
 aut_config = "#{workspace}/guitar-config/configuration.xml"
 aut_mainclass = "edu.rice.cs.drjava.DrJava"
 cobertura_cp = "/usr/share/java/cobertura.jar"
-reports = "#{workspace}/cobertura-reports"
 guitar_root = "#{workspace}/guitar"
 guitar_build_file = "#{workspace}/build.xml"
 guitar_jfc = "#{workspace}/guitar/dist/guitar"
@@ -53,14 +53,20 @@ log_file = "#{output_dir}/DrJava.log"
 testcases_dir = "#{output_dir}/testcases"
 states_dir = "#{output_dir}/states"
 logs_dir = "#{output_dir}/logs"
-faulty_logs_dir = "#{output_dir}/faulty_logs"
-faulty_states_dir = "#{output_dir}/faulty_states"
-intial_wait = 2000
 ripper_delay = 500
 tc_length = 2
 relayer_delay = 200
+intial_wait = 2000
 
-table_name = opts.dev ? "coverage_devmode" : "coverage_#{Time.now.strftime("%Y%m%d%H%M%S")}"
+faulty_world = "#{workspace}/faulty_world"
+faulty_root = "#{faulty_world}/#{aut_name}"
+faulty_output = "#{faulty_world}/output"
+faulty_logs = "#{faulty_output}/logs"
+faulty_states = "#{faulty_output}/states"
+
+ENV['JAVA7_HOME'] = `uname -a | grep i386` != "" ? '/usr/lib/jvm/java-7-openjdk-i386' : '/usr/lib/jvm/java-7-openjdk-amd64'
+coverage_table = opts.coverage_table ? opt.coverage_table : (opts.dev ? "coverage_devmode" : "coverage_#{Time.now.strftime("%Y%m%d%H%M%S")}")
+faults_table = opts.dev ? "faults_devmode" : "faults_#{Time.now.strftime("%Y%m%d%H%M%S")}"
 
 if ! File.directory? guitar_root
 	p 'Checking out GUITAR source'
@@ -133,15 +139,12 @@ end
 
 if opts.replays >= 0
 	p "Replaying test cases"
-	create_table(table_name)
-	total = `ls -l $testcases_dir | wc -l`.to_i
+	create_coverage_table(coverage_table)
+	total = `ls -l #{testcases_dir} | wc -l`.to_i
 	testcase_num = opts.replays == 0 ? total : opts.replays
-	FileUtils.rm_rf reports + '/*'
-	counter = 0
 
-	Dir[testcases_dir + '/*.tst'].first(testcase_num).each do |tc|
-		counter += 1
-		p "Running test case #{counter}"
+	Dir[testcases_dir + '/*.tst'].first(testcase_num).each_with_index do |tc, tc_n|
+		p "Running test case #{tc_n + 1}"
 
 		FileUtils.rm "#{workspace}/cobertura.ser"
 		FileUtils.cp "#{workspace}/cobertura.ser.bkp", "cobertura.ser"
@@ -154,60 +157,62 @@ if opts.replays >= 0
 		`#{replay_cmd}`
 
 		`cobertura-report --format xml --destination #{workspace} 2>&1 > /dev/null --datafile #{workspace}/cobertura.ser`
-		write_coverage(test_name, workspace + '/coverage.xml', table_name)
+		write_coverage(test_name, workspace + '/coverage.xml', coverage_table)
 		FileUtils.rm "#{workspace}/coverage.xml"
 	end
 end
 
 if opts.manual
 	p "Manually running the AUT"
-	create_table(table_name)
+	create_coverage_table(coverage_table)
 	`java #{guitar_opts} -cp #{classpath} edu.umd.cs.guitar.replayer.JFCReplayerMain #{guitar_args}`
 
 	`cobertura-report --format xml --destination #{workspace} 2>&1 > /dev/null --datafile #{workspace}/cobertura.ser`
-	write_coverage(test_name, workspace + '/coverage.xml', table_name)
+	write_coverage(test_name, workspace + '/coverage.xml', coverage_table)
 	FileUtils.rm "#{workspace}/coverage.xml"
 end
 
 if opts.faults
-	faulty_factory = "#{workspace}/faulty_factory"
-	faulty_classpath = "#{faulty_factory}/drjava/drjava.jar"
+	FileUtils.mkdir_p faulty_world if ! File.directory? faulty_world
+	FileUtils.mkdir_p faulty_output if ! File.directory? faulty_output
+	FileUtils.mkdir_p faulty_states if ! File.directory? faulty_states
+	FileUtils.mkdir_p faulty_logs if ! File.directory? faulty_logs
+
+	if ! File.directory? faulty_root
+		FileUtils.cp_r aut_root, faulty_world
+	end
+
+	faulty_classpath = "#{aut_inst}:#{cobertura_cp}:#{faulty_root}/drjava.jar"
 	Dir["#{guitar_jfc_lib}/**/*.jar"].each { |jar| faulty_classpath << ':' + jar }
 	create_faults_table("faults")
 
 	IO.readlines(opts.faults_file).each_with_index do |line, f_n|
-		p "Seeding fault number #{f_n}"
-
-		p 'getting relevante tc'
-		test_cases = get_relevant_testcases(table_name, split_line[0], split_line[0] + '.' + split_line[1], split_line[2])
+		p "Seeding fault number #{f_n + 1}"
+		split_line = line.split '#'
+		faulty_file = "#{faulty_root}/src/#{split_line[0].gsub('.', '/')}/#{split_line[1]}.java"
+		test_cases = get_relevant_testcases(coverage_table, split_line[0], split_line[0] + '.' + split_line[1], split_line[2])
 		p "There are #{test_cases.num_rows} relevant test cases for this fault"
 		next if test_cases.num_rows == 0
 
-		split_line = line.split '#'
-		faulty_file = "#{faulty_factory}/drjava/src/#{split_line[0].gsub('.', '/')}/#{split_line[1]}.java"
 		FileUtils.cp faulty_file, faulty_file + '.bkp'
 		`sed -i '#{split_line[2]}c#{split_line[3]}' #{faulty_file}`
 
-		p 'building faulty'
-		FileUtils.rm_rf "#{faulty_factory}/drjava.jar"
-		FileUtils.rm_rf "#{faulty_factory}/classes"
-		ENV['JAVA7_HOME'] = `uname -a | grep i386` != "" ? '/usr/lib/jvm/java-7-openjdk-i386' : '/usr/lib/jvm/java-7-openjdk-amd64'
-		`ant jar -f #{faulty_factory}/drjava/build.xml`
+		FileUtils.rm_rf "#{faulty_root}/drjava.jar"
+		FileUtils.rm_rf "#{faulty_root}/classes"
+		`ant jar -f #{faulty_root}/build.xml`
 		FileUtils.cp faulty_file + '.bkp', faulty_file
-
 		test_cases.each_hash do |row|
 			p "Running test case number #{row['testcase']}"
 			guitar_opts="-Dlog4j.configuration=log/guitar-clean.glc -Dnet.sourceforge.cobertura.datafile=cobertura.ser"
-			guitar_args = "-c #{aut_mainclass} -g #{gui_file} -e #{efg_file} -t #{testcases_dir}/#{row['testcase']}.tst -i #{intial_wait} -d #{relayer_delay} -l #{faulty_logs_dir}/#{row['testcase']}.log -gs #{faulty_states_dir}/#{row['testcase']}.sta -cf #{aut_config}"
-			if opts.xvfb
-				`xvfb-run -a java #{guitar_opts} -cp #{faulty_classpath} edu.umd.cs.guitar.replayer.JFCReplayerMain #{guitar_args}`
-			else
-				`java #{guitar_opts} -cp #{faulty_classpath} edu.umd.cs.guitar.replayer.JFCReplayerMain #{guitar_args}`
-			end
+			guitar_args = "-c #{aut_mainclass} -g #{gui_file} -e #{efg_file} -t #{testcases_dir}/#{row['testcase']}.tst -i #{intial_wait} -d #{relayer_delay} -l #{faulty_logs}/#{row['testcase']}.log -gs #{faulty_states}/#{row['testcase']}.sta -cf #{aut_config}"
+			run_cmd = "java #{guitar_opts} -cp #{faulty_classpath} edu.umd.cs.guitar.replayer.JFCReplayerMain #{guitar_args}"
+			run_cmd.insert(0, 'xvfb-run -a ') if opts.xvfb
+			`#{run_cmd}`
+
+			`sed '/milliseconds/d' #{states_dir}/#{row['testcase']}.sta | sort > 'state'`
+			`sed '/milliseconds/d' #{faulty_states}/#{row['testcase']}.sta | sort > 'faulty_state'`
+			detection = `diff state faulty_state` != "" ? true : false
+			write_fault(row['testcase'], f_n + 1, detection, faults_table)
 		end
 	end
 end
-
-
-
-
