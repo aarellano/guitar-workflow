@@ -66,7 +66,7 @@ faulty_logs = "#{faulty_output}/logs"
 faulty_states = "#{faulty_output}/states"
 
 ENV['JAVA7_HOME'] = `uname -a | grep i386` != "" ? '/usr/lib/jvm/java-7-openjdk-i386' : '/usr/lib/jvm/java-7-openjdk-amd64'
-coverage_table = opts.coverage_table ? opt.coverage_table : (opts.dev ? "coverage_devmode" : "coverage_#{Time.now.strftime("%Y%m%d%H%M%S")}")
+coverage_table = opts.coverage_table ? opts.coverage_table : (opts.dev ? "coverage_devmode" : "coverage_#{Time.now.strftime("%Y%m%d%H%M%S")}")
 faults_table = opts.dev ? "faults_devmode" : "faults_#{Time.now.strftime("%Y%m%d%H%M%S")}"
 
 if ! File.directory? guitar_root
