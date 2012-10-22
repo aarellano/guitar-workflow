@@ -27,8 +27,8 @@ opts = Trollop::options do
 	opt :manual, "With this option the AUT can be run manually, without automated tests"
 	opt :faults, "This flag enable the fault matrix generation", default: false
 	opt :faults_file, "This file should have all the faults", type: :string
-	opt :coverage_table, "This option can be used to specify the name of an already created coverage matrix (table) when running the faulty versions. This name is used even in dev mode -dev"
-	opt :workspace, "This is the path to be used as the workspace. It overrides the environment var WORKSPACE used by Jenkins"
+	opt :coverage_table, "This option can be used to specify the name of an already created coverage matrix (table) when running the faulty versions. This name is used even in dev mode -dev", type: :string
+	opt :workspace, "This is the path to be used as the workspace. It overrides the environment var WORKSPACE used by Jenkins", type: :string
 end
 
 workspace = opts.workspace ? opt.workspace : (ENV['WORKSPACE'] ? ENV['WORKSPACE'] : Dir.pwd)
