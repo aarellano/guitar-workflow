@@ -22,13 +22,15 @@ opts = Trollop::options do
 	opt :xvfb, "By default xvfb is used to perform all graphical operations in memory. If disabled, the graphics will be shown on a standard X11 server", default: true
 	opt :replays, "Maximum number of test cases to write and replay. If 0 all the test cases are run. If -1 no test cases are run", default: -1
 	opt :rip, "This option enables ripping the AUT", default: false
+	opt :wtc, "Number of test cases to write from the EFG. If 0 then all the possible TC are written. If -1 no test cases are written. All the previous test cases are discarted", default: -1
 	opt :dev, "This option uses a development table when writing to the database.", default: true
 	opt :manual, "With this option the AUT can be run manually, without automated tests"
 	opt :faults, "This flag enable the fault matrix generation", default: false
 	opt :faults_file, "This file should have all the faults", type: :string
 end
 
-workspace = "/var/lib/jenkins/workspace/phase2" if ! ENV['WORKSPACE']
+workspace = ENV['WORKSPACE'] ? ENV['WORKSPACE'] : "/var/lib/jenkins/workspace/phase2"
+aut_name = "drjava"
 aut_root = "#{workspace}/drjava"
 aut_cp = "#{aut_root}/drjava.jar"
 aut_src = "#{aut_root}/src"
@@ -120,9 +122,12 @@ if opts.rip
 
 	p "Converting GUI structure file to Event Flow Graph (EFG) file"
 	`java #{guitar_opts} -cp #{classpath} edu.umd.cs.guitar.graph.GUIStructure2GraphConverter -p EFGConverter -g #{gui_file} -e #{efg_file}`
+end
 
-	p "Generating test cases to cover #{opts.replays} #{tc_length}-way event interactions"
-	`java #{guitar_opts} -cp #{classpath} edu.umd.cs.guitar.testcase.TestCaseGenerator -p RandomSequenceLengthCoverage -e #{efg_file} -l #{tc_length} -m #{opts.replays} -d #{testcases_dir}`
+if opts.wtc > 0
+	p "Generating test cases to cover #{opts.wtc} #{tc_length}-way event interactions"
+	`rm -rf #{testcases_dir}/*`
+	`java #{guitar_opts} -cp #{classpath} edu.umd.cs.guitar.testcase.TestCaseGenerator -p RandomSequenceLengthCoverage -e #{efg_file} -l #{tc_length} -m #{opts.wtc} -d #{testcases_dir}`
 end
 
 
