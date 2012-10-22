@@ -28,9 +28,10 @@ opts = Trollop::options do
 	opt :faults, "This flag enable the fault matrix generation", default: false
 	opt :faults_file, "This file should have all the faults", type: :string
 	opt :coverage_table, "This option can be used to specify the name of an already created coverage matrix (table) when running the faulty versions. This name is used even in dev mode -dev"
+	opt :workspace, "This is the path to be used as the workspace. It overrides the environment var WORKSPACE used by Jenkins"
 end
 
-workspace = ENV['WORKSPACE'] ? ENV['WORKSPACE'] : "/var/lib/jenkins/workspace/phase2"
+workspace = opts.workspace ? opt.workspace : (ENV['WORKSPACE'] ? ENV['WORKSPACE'] : Dir.pwd)
 aut_name = "drjava"
 aut_root = "#{workspace}/drjava"
 aut_cp = "#{aut_root}/drjava.jar"
@@ -71,14 +72,14 @@ faults_table = opts.dev ? "faults_devmode" : "faults_#{Time.now.strftime("%Y%m%d
 if ! File.directory? guitar_root
 	p 'Checking out GUITAR source'
 	FileUtils.mkdir_p guitar_root
-	`svn co https://guitar.svn.sourceforge.net/svnroot/guitar/trunk@3320 guitar_root`
+	`svn co https://guitar.svn.sourceforge.net/svnroot/guitar/trunk@3320 #{guitar_root}`
 end
 
 if ! File.directory? guitar_jfc
 	p 'Building the GUITAR target jfc.dist'
 	`ant -f #{guitar_build_file} jfc.dist`
 	# This jar is outdated, and causes problems if not removed
-	FileUtils.rm_rf  "#guitar_jfc/jars/cobertura.jar"
+	FileUtils.rm_rf  "#{guitar_jfc}/jars/cobertura.jar"
 end
 
 if ! File.directory? aut_root
