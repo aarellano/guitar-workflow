@@ -210,10 +210,28 @@ if opts.faults
 			run_cmd.insert(0, 'xvfb-run -a ') if opts.xvfb
 			`#{run_cmd}`
 
-			`sed '/milliseconds/d' #{states_dir}/#{row['testcase']}.sta | sort > 'state'`
-			`sed '/milliseconds/d' #{faulty_states}/#{row['testcase']}.sta | sort > 'faulty_state'`
+			`sed 's/^[ \t]*//;s/[ \t]*$//;/milliseconds/d;/^$/d' #{states_dir}/#{row['testcase']}.sta > 'state'`
+			IO.readlines('state').each do |line|
+				f = open('state_word_sorted','a')
+				f.puts line.chars.sort.join
+				f.close
+			end
+			`sed 's/^[ \t]*//;s/[ \t]*$//;/^$/d' state_word_sorted > state`
+			`sort state > state`
+
+			`sed 's/^[ \t]*//;s/[ \t]*$//;/milliseconds/d;/^$/d' #{faulty_states}/#{row['testcase']}.sta > faulty_state`
+			IO.readlines('faulty_state').each do |line|
+				f = open('faulty_state_word_sorted','a')
+				f.puts line.chars.sort.join
+				f.close
+			end
+			`sed 's/^[ \t]*//;s/[ \t]*$//;/^$/d' faulty_state_word_sorted > faulty_state`
+			`sort faulty_state > faulty_state`
+
 			detection = `diff state faulty_state` != "" ? true : false
-			write_fault(row['testcase'], f_n + 1, detection, faults_table)
+			write_fault(row['testcase'], f_n + 1, detection, split_line[4], faults_table)
+
+			`rm state state_word_sorted faulty_state faulty_state_word_sorted`
 		end
 	end
 end

@@ -11,7 +11,7 @@ end
 def create_faults_table(table_name)
   dbh = get_dbh
   dbh.query("DROP TABLE IF EXISTS #{table_name}")
-  dbh.query("CREATE TABLE #{table_name}(fault INT, testcase VARCHAR(100), detection BOOL, PRIMARY KEY (fault, testcase))")
+  dbh.query("CREATE TABLE #{table_name}(fault INT, testcase VARCHAR(100), detection BOOL, fault_type INT, PRIMARY KEY (fault, testcase))")
   dbh.close if dbh
 end
 
@@ -47,8 +47,8 @@ def get_relevant_testcases(coverage_table, package, class_name, line)
   return dbh.query "SELECT testcase FROM #{coverage_table} WHERE (package = '#{package}' AND class = '#{class_name}' AND line = #{line} AND hits > 0)"
 end
 
-def write_fault(testcase, fault_number, detection, table_name)
+def write_fault(testcase, fault_number, detection, fault_type, table_name)
   dbh = get_dbh
-  dbh.query "INSERT INTO #{table_name} (fault, testcase, detection) VALUES (#{fault_number}, '#{testcase}', #{detection})"
+  dbh.query "INSERT INTO #{table_name} (fault, testcase, detection, fault_type) VALUES (#{fault_number}, '#{testcase}', #{detection}, #{fault_type})"
   dbh.close if dbh
 end
