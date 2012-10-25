@@ -4,6 +4,7 @@ require 'mysql'
 require 'fileutils'
 require 'find'
 
+require_relative "util"
 require_relative "db_util"
 
 opts = Trollop::options do
@@ -137,15 +138,15 @@ if opts.wtc >= 0
 	`java #{guitar_opts} -cp #{classpath} edu.umd.cs.guitar.testcase.TestCaseGenerator -p RandomSequenceLengthCoverage -e #{efg_file} -l #{tc_length} -m #{opts.wtc} -d #{testcases_dir}`
 end
 
-
 if opts.replays >= 0
 	p "Replaying test cases"
 	create_coverage_table(coverage_table)
 	total = `ls -l #{testcases_dir} | wc -l`.to_i
 	testcase_num = opts.replays == 0 ? total : opts.replays
+	ETR.start testcase_num
 
 	Dir[testcases_dir + '/*.tst'].first(testcase_num).each_with_index do |tc, tc_n|
-		p "Running test case #{tc_n + 1}"
+		p "Running test case #{tc_n + 1}. Estimated time remaining: #{(ETR.finish / 3600).round 2} hours "
 
 		FileUtils.rm "#{workspace}/cobertura.ser"
 		FileUtils.cp "#{workspace}/cobertura.ser.bkp", "cobertura.ser"
@@ -161,6 +162,7 @@ if opts.replays >= 0
 		write_coverage(test_name, workspace + '/coverage.xml', coverage_table)
 		FileUtils.rm "#{workspace}/coverage.xml"
 	end
+	puts "FINISHED. TOTAL TIME REPLAYING TEST CASES: #{(ETR.run / 3600).round 2} hours"
 end
 
 if opts.manual
@@ -187,8 +189,9 @@ if opts.faults
 	Dir["#{guitar_jfc_lib}/**/*.jar"].each { |jar| faulty_classpath << ':' + jar }
 	create_faults_table(faults_table)
 
+	ETR.start `wc -l opts.faults_file`.to_i
 	IO.readlines(opts.faults_file).each_with_index do |line, f_n|
-		p "Seeding fault number #{f_n + 1}"
+		p "Seeding fault number #{f_n + 1}. Estimated time remaining: #{(ETR.run / 3600).round 2} hours"
 		split_line = line.split '#'
 		faulty_file = "#{faulty_root}/src/#{split_line[0].gsub('.', '/')}/#{split_line[1]}.java"
 		test_cases = get_relevant_testcases(coverage_table, split_line[0], split_line[0] + '.' + split_line[1], split_line[2])
@@ -226,12 +229,13 @@ if opts.faults
 				f.close
 			end
 			`sed 's/^[ \t]*//;s/[ \t]*$//;/^$/d' faulty_state_word_sorted > faulty_state`
-			`sort faulty_state > faulty_state`
+			`sort faulty_state > faulty_stateste`
 
 			detection = `diff state faulty_state` != "" ? true : false
 			write_fault(row['testcase'], f_n + 1, detection, split_line[4], faults_table)
 
 			`rm state state_word_sorted faulty_state faulty_state_word_sorted`
 		end
+	puts "FINISHED. TOTAL TIME SEEDING FAULTS: #{(ETR.run / 3600).round 2} hours"
 	end
 end
