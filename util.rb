@@ -7,6 +7,7 @@ class ETR
 def self.start cycles
 	@@start_time = Time.now
 	@@cycles = cycles
+	@@current_cycle = 0
 end
 
 def self.run
