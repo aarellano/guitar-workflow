@@ -26,7 +26,7 @@ def write_coverage(testcase, xml_file, table_name)
   xml.xpath("//packages/package").each do |p|
     p.xpath("classes/class").each do |c|
       c.xpath("lines/line").each do |l|
-        if (l['hits'] > 0)
+        if (l['hits'].to_i > 0)
           values += ',' unless counter == 0
           values += "('#{testcase}', '#{p['name']}', '#{c['name']}', #{l['number']}, #{l['hits']})"
           if (counter += 1) == 10000
