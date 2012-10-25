@@ -21,14 +21,22 @@ def write_coverage(testcase, xml_file, table_name)
   f = File.open(xml_file)
   xml = Nokogiri::XML(f)
   f.close
-
+  values = ''
+  counter = 0
   xml.xpath("//packages/package").each do |p|
     p.xpath("classes/class").each do |c|
       c.xpath("lines/line").each do |l|
-        dbh.query "INSERT INTO #{table_name} (testcase, package, class, line, hits) VALUES ('#{testcase}', '#{p['name']}', '#{c['name']}', #{l['number']}, #{l['hits']});"
+        values += ',' unless counter == 0
+        values += "('#{testcase}', '#{p['name']}', '#{c['name']}', #{l['number']}, #{l['hits']})"
+        if (counter += 1) == 10000
+          dbh.query "INSERT INTO #{table_name} (testcase, package, class, line, hits) VALUES #{values};"
+          values = ''
+          counter = 0
+        end
       end
     end
   end
+  dbh.query "INSERT INTO #{table_name} (testcase, package, class, line, hits) VALUES #{values};" if values != ''
   dbh.close if dbh
 end
 
