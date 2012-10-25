@@ -26,12 +26,14 @@ def write_coverage(testcase, xml_file, table_name)
   xml.xpath("//packages/package").each do |p|
     p.xpath("classes/class").each do |c|
       c.xpath("lines/line").each do |l|
-        values += ',' unless counter == 0
-        values += "('#{testcase}', '#{p['name']}', '#{c['name']}', #{l['number']}, #{l['hits']})"
-        if (counter += 1) == 10000
-          dbh.query "INSERT INTO #{table_name} (testcase, package, class, line, hits) VALUES #{values};"
-          values = ''
-          counter = 0
+        if (l['hits'] > 0)
+          values += ',' unless counter == 0
+          values += "('#{testcase}', '#{p['name']}', '#{c['name']}', #{l['number']}, #{l['hits']})"
+          if (counter += 1) == 10000
+            dbh.query "INSERT INTO #{table_name} (testcase, package, class, line, hits) VALUES #{values};"
+            values = ''
+            counter = 0
+          end
         end
       end
     end
