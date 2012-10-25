@@ -146,7 +146,7 @@ if opts.replays >= 0
 	ETR.start testcase_num
 
 	Dir[testcases_dir + '/*.tst'].first(testcase_num).each_with_index do |tc, tc_n|
-		p "Running test case #{tc_n + 1}. Estimated time remaining: #{(ETR.finish / 3600).round 2} hours "
+		p "Running test case #{tc_n + 1}. Estimated time remaining: #{(ETR.run / 3600).round 2} hours "
 
 		FileUtils.rm "#{workspace}/cobertura.ser"
 		FileUtils.cp "#{workspace}/cobertura.ser.bkp", "cobertura.ser"
@@ -162,7 +162,7 @@ if opts.replays >= 0
 		write_coverage(test_name, workspace + '/coverage.xml', coverage_table)
 		FileUtils.rm "#{workspace}/coverage.xml"
 	end
-	puts "FINISHED. TOTAL TIME REPLAYING TEST CASES: #{(ETR.run / 3600).round 2} hours"
+	puts "FINISHED. TOTAL TIME REPLAYING TEST CASES: #{(ETR.finish / 3600).round 2} hours"
 end
 
 if opts.manual
@@ -236,6 +236,6 @@ if opts.faults
 
 			`rm state state_word_sorted faulty_state faulty_state_word_sorted`
 		end
-	puts "FINISHED. TOTAL TIME SEEDING FAULTS: #{(ETR.run / 3600).round 2} hours"
+	puts "FINISHED. TOTAL TIME SEEDING FAULTS: #{(ETR.finish / 3600).round 2} hours"
 	end
 end
