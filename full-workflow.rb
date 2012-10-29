@@ -70,26 +70,26 @@ ENV['JAVA7_HOME'] = `uname -a | grep i386` != "" ? '/usr/lib/jvm/java-7-openjdk-
 table_postfix = opts.table_postfix ? opts.table_postfix : (opts.dev ? "devmode" : "#{Time.now.strftime("%Y%m%d%H%M%S")}")
 
 if ! File.directory? guitar_root
-	p 'Checking out GUITAR source'
+	puts 'Checking out GUITAR source'
 	FileUtils.mkdir_p guitar_root
 	`svn co https://guitar.svn.sourceforge.net/svnroot/guitar/trunk@3320 #{guitar_root}`
 end
 
 if ! File.directory? guitar_jfc
-	p 'Building the GUITAR target jfc.dist'
+	puts 'Building the GUITAR target jfc.dist'
 	`ant -f #{guitar_build_file} jfc.dist`
 	# This jar is outdated, and causes problems if not removed
 	FileUtils.rm_rf  "#{guitar_jfc}/jars/cobertura.jar"
 end
 
 if ! File.directory? aut_root
-	p 'Checking out AUT'
+	puts 'Checking out AUT'
 	FileUtils.mkdir_p aut_root
 	`svn co https://drjava.svn.sourceforge.net/svnroot/drjava/trunk/drjava@5686 #{aut_root}`
 end
 
 if ! File.directory? aut_bin
-	p 'Building AUT'
+	puts 'Building AUT'
 	FileUtils.mkdir_p aut_bin
 	if (`uname -a | grep i386`) != ""
 		ENV['JAVA7_HOME'] = '/usr/lib/jvm/java-7-openjdk-i386'
@@ -100,7 +100,7 @@ if ! File.directory? aut_bin
 end
 
 if ! File.directory? aut_inst
-	p 'Instrumenting classes'
+	puts 'Instrumenting classes'
 	FileUtils.mkdir_p aut_inst
 	FileUtils.rm_rf "#{aut_inst}/*"
 	FileUtils.cd aut_inst
@@ -122,30 +122,30 @@ if opts.rip
 	guitar_opts = '-Dlog4j.configuration=log/guitar-clean.glc'
 	guitar_args = "-c #{aut_mainclass} -g #{gui_file} -cf #{aut_config} -d #{ripper_delay} -i #{intial_wait} -l #{log_file}"
 
-	p "Ripping the application"
+	puts "Ripping the application"
 	rip_cmd = "java -Duser.home=#{workspace}/tmp #{guitar_opts} -cp #{classpath} edu.umd.cs.guitar.ripper.JFCRipperMain #{guitar_args}"
 	rip_cmd.insert(0, 'xvfb-run -a ') if opts.xvfb
 	`#{rip_cmd}`
 
-	p "Converting GUI structure file to Event Flow Graph (EFG) file"
+	puts "Converting GUI structure file to Event Flow Graph (EFG) file"
 	`java #{guitar_opts} -cp #{classpath} edu.umd.cs.guitar.graph.GUIStructure2GraphConverter -p EFGConverter -g #{gui_file} -e #{efg_file}`
 end
 
 if opts.wtc >= 0
-	p "Generating test cases to cover #{opts.wtc} #{tc_length}-way event interactions"
+	puts "Generating test cases to cover #{opts.wtc} #{tc_length}-way event interactions"
 	`rm -rf #{testcases_dir}/*`
 	`java #{guitar_opts} -cp #{classpath} edu.umd.cs.guitar.testcase.TestCaseGenerator -p RandomSequenceLengthCoverage -e #{efg_file} -l #{tc_length} -m #{opts.wtc} -d #{testcases_dir}`
 end
 
 if opts.replays >= 0
-	p "Replaying test cases"
+	puts "Replaying test cases"
 	create_coverage_table(table_postfix)
 	total = `ls -l #{testcases_dir} | wc -l`.to_i
 	testcase_num = opts.replays == 0 ? total : opts.replays
 	ETR.start testcase_num
 
 	Dir[testcases_dir + '/*.tst'].first(testcase_num).each_with_index do |tc, tc_n|
-		p "Running test case #{tc_n + 1}. Estimated time remaining: #{(ETR.run / 3600).round 2} hours "
+		puts "Running test case #{tc_n + 1}. Estimated time remaining: #{(ETR.run / 3600).round 2} hours "
 
 		FileUtils.rm "#{workspace}/cobertura.ser"
 		FileUtils.cp "#{workspace}/cobertura.ser.bkp", "cobertura.ser"
@@ -165,7 +165,7 @@ if opts.replays >= 0
 end
 
 if opts.manual
-	p "Manually running the AUT"
+	puts "Manually running the AUT"
 	create_coverage_table(table_postfix)
 	`java #{guitar_opts} -cp #{classpath} edu.umd.cs.guitar.replayer.JFCReplayerMain #{guitar_args}`
 
@@ -190,11 +190,11 @@ if opts.faults
 
 	ETR.start `wc -l #{opts.faults_file}`.to_i
 	IO.readlines(opts.faults_file).each_with_index do |line, f_n|
-		p "Seeding fault number #{f_n + 1}. Estimated time remaining: #{(ETR.run / 3600).round 2} hours"
+		puts "Seeding fault number #{f_n + 1}. Estimated time remaining: #{(ETR.run / 3600).round 2} hours"
 		split_line = line.split '#'
 		faulty_file = "#{faulty_root}/src/#{split_line[0].gsub('.', '/')}/#{split_line[1]}.java"
 		test_cases = get_relevant_testcases(table_postfix, split_line[0], split_line[0] + '.' + split_line[1], split_line[2])
-		p "There are #{test_cases.num_rows} relevant test cases for this fault"
+		puts "There are #{test_cases.num_rows} relevant test cases for this fault"
 
 		FileUtils.cp faulty_file, faulty_file + '.bkp'
 		`sed -i '#{split_line[2]}c#{split_line[3]}' #{faulty_file}`
@@ -204,7 +204,7 @@ if opts.faults
 		`ant jar -f #{faulty_root}/build.xml`
 		FileUtils.cp faulty_file + '.bkp', faulty_file
 		test_cases.each_hash do |row|
-			p "Running test case #{row['tc_name']}"
+			puts "Running test case #{row['tc_name']}"
 			guitar_opts="-Dlog4j.configuration=log/guitar-clean.glc -Dnet.sourceforge.cobertura.datafile=cobertura.ser"
 			guitar_args = "-c #{aut_mainclass} -g #{gui_file} -e #{efg_file} -t #{testcases_dir}/#{row['tc_name']}.tst -i #{intial_wait} -d #{relayer_delay} -l #{faulty_logs}/#{row['tc_name']}.log -gs #{faulty_states}/#{row['tc_name']}.sta -cf #{aut_config}"
 			run_cmd = "java #{guitar_opts} -cp #{faulty_classpath} edu.umd.cs.guitar.replayer.JFCReplayerMain #{guitar_args}"
