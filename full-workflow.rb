@@ -28,7 +28,7 @@ opts = Trollop::options do
 	opt :manual, "With this option the AUT can be run manually, without automated tests"
 	opt :faults, "This flag enable the fault matrix generation", default: false
 	opt :faults_file, "This file should have all the faults", type: :string
-	opt :coverage_table, "This option can be used to specify the name of an already created coverage matrix (table) when running the faulty versions. This name is used even in dev mode -dev", type: :string
+	opt :table_postfix, "This option is used to specify a custom coverage and faults tables' postfix. The postfix used by default is the current time. This option overwrites dev mode -dev", type: :string
 	opt :workspace, "This is the path to be used as the workspace. It overrides the environment var WORKSPACE used by Jenkins", type: :string
 end
 
@@ -67,8 +67,7 @@ faulty_logs = "#{faulty_output}/logs"
 faulty_states = "#{faulty_output}/states"
 
 ENV['JAVA7_HOME'] = `uname -a | grep i386` != "" ? '/usr/lib/jvm/java-7-openjdk-i386' : '/usr/lib/jvm/java-7-openjdk-amd64'
-coverage_table = opts.coverage_table ? opts.coverage_table : (opts.dev ? "coverage_devmode" : "coverage_#{Time.now.strftime("%Y%m%d%H%M%S")}")
-faults_table = opts.dev ? "faults_devmode" : "faults_#{Time.now.strftime("%Y%m%d%H%M%S")}"
+table_postfix = opts.table_postfix ? opts.table_postfix : (opts.dev ? "devmode" : "#{Time.now.strftime("%Y%m%d%H%M%S")}")
 
 if ! File.directory? guitar_root
 	p 'Checking out GUITAR source'
@@ -140,7 +139,7 @@ end
 
 if opts.replays >= 0
 	p "Replaying test cases"
-	create_coverage_table(coverage_table)
+	create_coverage_table(table_postfix)
 	total = `ls -l #{testcases_dir} | wc -l`.to_i
 	testcase_num = opts.replays == 0 ? total : opts.replays
 	ETR.start testcase_num
@@ -159,7 +158,7 @@ if opts.replays >= 0
 		`#{replay_cmd}`
 
 		`cobertura-report --format xml --destination #{workspace} 2>&1 > /dev/null --datafile #{workspace}/cobertura.ser`
-		write_coverage(test_name, workspace + '/coverage.xml', coverage_table)
+		write_coverage(test_name, workspace + '/coverage.xml', table_postfix)
 		FileUtils.rm "#{workspace}/coverage.xml"
 	end
 	puts "FINISHED. TOTAL TIME REPLAYING TEST CASES: #{(ETR.finish / 3600).round 2} hours"
@@ -167,11 +166,11 @@ end
 
 if opts.manual
 	p "Manually running the AUT"
-	create_coverage_table(coverage_table)
+	create_coverage_table(table_postfix)
 	`java #{guitar_opts} -cp #{classpath} edu.umd.cs.guitar.replayer.JFCReplayerMain #{guitar_args}`
 
 	`cobertura-report --format xml --destination #{workspace} 2>&1 > /dev/null --datafile #{workspace}/cobertura.ser`
-	write_coverage(test_name, workspace + '/coverage.xml', coverage_table)
+	write_coverage(test_name, workspace + '/coverage.xml', table_postfix)
 	FileUtils.rm "#{workspace}/coverage.xml"
 end
 
@@ -187,16 +186,15 @@ if opts.faults
 
 	faulty_classpath = "#{aut_inst}:#{cobertura_cp}:#{faulty_root}/drjava.jar"
 	Dir["#{guitar_jfc_lib}/**/*.jar"].each { |jar| faulty_classpath << ':' + jar }
-	create_faults_table(faults_table)
+	create_faults_table(table_postfix)
 
-	ETR.start `wc -l opts.faults_file`.to_i
+	ETR.start `wc -l #{opts.faults_file}`.to_i
 	IO.readlines(opts.faults_file).each_with_index do |line, f_n|
 		p "Seeding fault number #{f_n + 1}. Estimated time remaining: #{(ETR.run / 3600).round 2} hours"
 		split_line = line.split '#'
 		faulty_file = "#{faulty_root}/src/#{split_line[0].gsub('.', '/')}/#{split_line[1]}.java"
-		test_cases = get_relevant_testcases(coverage_table, split_line[0], split_line[0] + '.' + split_line[1], split_line[2])
+		test_cases = get_relevant_testcases(table_postfix, split_line[0], split_line[0] + '.' + split_line[1], split_line[2])
 		p "There are #{test_cases.num_rows} relevant test cases for this fault"
-		next if test_cases.num_rows == 0
 
 		FileUtils.cp faulty_file, faulty_file + '.bkp'
 		`sed -i '#{split_line[2]}c#{split_line[3]}' #{faulty_file}`
@@ -206,14 +204,14 @@ if opts.faults
 		`ant jar -f #{faulty_root}/build.xml`
 		FileUtils.cp faulty_file + '.bkp', faulty_file
 		test_cases.each_hash do |row|
-			p "Running test case number #{row['testcase']}"
+			p "Running test case #{row['tc_name']}"
 			guitar_opts="-Dlog4j.configuration=log/guitar-clean.glc -Dnet.sourceforge.cobertura.datafile=cobertura.ser"
-			guitar_args = "-c #{aut_mainclass} -g #{gui_file} -e #{efg_file} -t #{testcases_dir}/#{row['testcase']}.tst -i #{intial_wait} -d #{relayer_delay} -l #{faulty_logs}/#{row['testcase']}.log -gs #{faulty_states}/#{row['testcase']}.sta -cf #{aut_config}"
+			guitar_args = "-c #{aut_mainclass} -g #{gui_file} -e #{efg_file} -t #{testcases_dir}/#{row['tc_name']}.tst -i #{intial_wait} -d #{relayer_delay} -l #{faulty_logs}/#{row['tc_name']}.log -gs #{faulty_states}/#{row['tc_name']}.sta -cf #{aut_config}"
 			run_cmd = "java #{guitar_opts} -cp #{faulty_classpath} edu.umd.cs.guitar.replayer.JFCReplayerMain #{guitar_args}"
 			run_cmd.insert(0, 'xvfb-run -a ') if opts.xvfb
 			`#{run_cmd}`
 
-			`sed 's/^[ \t]*//;s/[ \t]*$//;/milliseconds/d;/^$/d' #{states_dir}/#{row['testcase']}.sta > 'state'`
+			`sed 's/^[ \t]*//;s/[ \t]*$//;/milliseconds/d;/^$/d' #{states_dir}/#{row['tc_name']}.sta > 'state'`
 			IO.readlines('state').each do |line|
 				f = open('state_word_sorted','a')
 				f.puts line.chars.sort.join
@@ -222,7 +220,7 @@ if opts.faults
 			`sed 's/^[ \t]*//;s/[ \t]*$//;/^$/d' state_word_sorted > state`
 			`sort state > state`
 
-			`sed 's/^[ \t]*//;s/[ \t]*$//;/milliseconds/d;/^$/d' #{faulty_states}/#{row['testcase']}.sta > faulty_state`
+			`sed 's/^[ \t]*//;s/[ \t]*$//;/milliseconds/d;/^$/d' #{faulty_states}/#{row['tc_name']}.sta > faulty_state`
 			IO.readlines('faulty_state').each do |line|
 				f = open('faulty_state_word_sorted','a')
 				f.puts line.chars.sort.join
@@ -232,10 +230,10 @@ if opts.faults
 			`sort faulty_state > faulty_stateste`
 
 			detection = `diff state faulty_state` != "" ? true : false
-			write_fault(row['testcase'], f_n + 1, detection, split_line[4], faults_table)
+			write_fault(row['tc_name'], f_n + 1, detection, split_line[4], table_postfix)
 
 			`rm state state_word_sorted faulty_state faulty_state_word_sorted`
 		end
-	puts "FINISHED. TOTAL TIME SEEDING FAULTS: #{(ETR.finish / 3600).round 2} hours"
 	end
+	puts "FINISHED. TOTAL TIME SEEDING FAULTS: #{(ETR.finish / 3600).round 2} hours"
 end
