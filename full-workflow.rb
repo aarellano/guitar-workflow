@@ -4,7 +4,7 @@ require 'mysql'
 require 'fileutils'
 require 'find'
 
-require_relative "util"
+require_relative "etr"
 require_relative "db_util"
 
 opts = Trollop::options do
