@@ -41,7 +41,7 @@ def write_coverage(testcase, xml_file, table_postfix)
           class_id = dbh.query("SELECT id FROM classes_#{table_postfix} WHERE class_name = '#{c['name'].gsub(/\$.*/,'')}'").fetch_hash['id']
           values += "(#{tc_id}, #{package_id}, #{class_id}, #{l['number']}, #{l['hits']})"
           if (counter += 1) == 10000
-            dbh.query "INSERT INTO coverage_#{table_postfix} (tc_id, package_id, class_id, line, hits) VALUES #{values};"
+            dbh.query "INSERT IGNORE INTO coverage_#{table_postfix} (tc_id, package_id, class_id, line, hits) VALUES #{values};"
             values = ''
             counter = 0
           end
