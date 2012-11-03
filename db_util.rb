@@ -32,7 +32,7 @@ def write_coverage(testcase, xml_file, table_postfix)
   xml.xpath("//packages/package").each do |p|
     dbh.query("INSERT IGNORE INTO packages_#{table_postfix} (package_name) VALUES ('#{p['name']}')")
     p.xpath("classes/class").each do |c|
-      dbh.query("INSERT IGNORE INTO classes_#{table_postfix} (class_name) VALUES ('#{c['name']}')")
+      dbh.query("INSERT IGNORE INTO classes_#{table_postfix} (class_name) VALUES ('#{c['name'].gsub(/\$.*/,'')}')")
       c.xpath("lines/line").each do |l|
         if ((l['hits']).to_i > 0)
           values += ',' unless counter == 0
