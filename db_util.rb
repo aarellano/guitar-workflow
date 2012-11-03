@@ -4,7 +4,7 @@ require 'nokogiri'
 def create_coverage_table(table_postfix)
   dbh = get_dbh
   dbh.query("DROP TABLE IF EXISTS coverage_#{table_postfix}")
-  dbh.query("CREATE TABLE coverage_#{table_postfix}(tc_id INT AUTO_INCREMENT, package_id INT, class_id INT, line INT, hits INT, PRIMARY KEY (tc_id, package_id, class_id, line))")
+  dbh.query("CREATE TABLE coverage_#{table_postfix}(tc_id INT, package_id INT, class_id INT, line INT, hits INT, PRIMARY KEY (tc_id, package_id, class_id, line))")
   dbh.query("DROP TABLE IF EXISTS classes_#{table_postfix}")
   dbh.query("CREATE TABLE classes_#{table_postfix} (id INT AUTO_INCREMENT, class_name VARCHAR(100), PRIMARY KEY (id), UNIQUE INDEX (class_name))")
   dbh.query("DROP TABLE IF EXISTS packages_#{table_postfix}")
@@ -49,7 +49,7 @@ def write_coverage(testcase, xml_file, table_postfix)
       end
     end
   end
-  dbh.query "INSERT INTO coverage_#{table_postfix} (tc_id, package_id, class_id, line, hits) VALUES #{values};" if values != ''
+  dbh.query "INSERT IGNORE INTO coverage_#{table_postfix} (tc_id, package_id, class_id, line, hits) VALUES #{values};" if values != ''
   dbh.close if dbh
 end
 
