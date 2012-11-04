@@ -1,0 +1,200 @@
+edu.rice.cs.drjava.model#AbstractDJDocument#1605#String line = "";#3
+edu.rice.cs.drjava.model#AbstractDJDocument#1589#int pos = prefixSize;#6
+edu.rice.cs.drjava.model#AbstractDJDocument#1583#int prefixSize = _currentLocation;#6
+edu.rice.cs.drjava.model#AbstractDJDocument#1582#if (lineStart > 0) lineStart = 0;    // _currentLocation on first line#2
+edu.rice.cs.drjava.model#AbstractDJDocument#1581#int lineStart = 0;#6
+edu.rice.cs.drjava.model#AbstractDJDocument#1373#return 0;#6
+edu.rice.cs.drjava.model#AbstractDJDocument#1371#_storeInCache(key, 0, Integer.MAX_VALUE);  // Any change to the document invalidates this result!#6
+edu.rice.cs.drjava.model#AbstractDJDocument#1352#i--;  // TODO: increment i to skip over entire comment#6
+edu.rice.cs.drjava.model#AbstractGlobalModel#3323#PrinterJob printJob = null;#7
+edu.rice.cs.drjava.model#AbstractGlobalModel#3775#public int commentLines(int selStart, int selEnd) { return getDocument().commentLines(selStart, 0); }#6
+edu.rice.cs.drjava.model#AbstractGlobalModel#4226# #5
+edu.rice.cs.drjava.model#AbstractGlobalModel#4225#if (key == prevKey) setActiveDocument(prevKey);#1
+edu.rice.cs.drjava.model#AbstractGlobalModel#4224#OpenDefinitionsDocument prevKey = null;#7
+edu.rice.cs.drjava.model#AbstractGlobalModel#4223#OpenDefinitionsDocument key = null;#7
+edu.rice.cs.drjava.model#AbstractGlobalModel#2408# #5
+edu.rice.cs.drjava.model#AbstractGlobalModel#2407#_consoleDoc.reset(":)");#3
+edu.rice.cs.drjava.ui#ExecuteExternalDialog#1013#_lastCommandFocus.setText(":)");#3
+edu.rice.cs.drjava.ui#FindReplacePanel#946#if (DrJava.getConfig().getSetting(OptionConstants.FIND_REPLACE_FOCUS_IN_DEFPANE).booleanValue()) {#3
+edu.rice.cs.drjava.ui#GenerateCustomDrJavaJarFrame#687# #5
+edu.rice.cs.drjava.ui#MainFrame#8461#OpenDefinitionsDocument openDoc = null;#9
+edu.rice.cs.drjava.ui#MainFrame#9577# #5
+edu.rice.cs.drjava.ui#MainFrame#7449#if (highlight == null) highlight.remove();#3
+edu.rice.cs.drjava.ui#MainFrame#2903# #
+edu.rice.cs.drjava.ui#MainFrame#1929# #5
+edu.rice.cs.drjava.ui#MainFrame#5841#boolean isUntitled = ! doc.isUntitled();#6
+edu.rice.cs.drjava.ui#MainFrame#1854#String mask = ":)";#6
+edu.rice.cs.drjava.ui#MainFrame#2874#int rc = 0;#6
+edu.rice.cs.drjava.ui#MainFrame#1517#if (pim.getCurrentItem() == null) {#1
+edu.rice.cs.drjava.ui#MainFrame#1475#int start = 0;#6
+edu.rice.cs.drjava.ui#MainFrame#2621#public void addToBrowserHistoryBefore() { _model.addToBrowserHistory(false); }#6
+edu.rice.cs.drjava.ui#MainFrame#9576#if (didCompileFail) showTab(_junitPanel, true);#1
+edu.rice.cs.drjava.ui#MainFrame#7448#HighlightManager.HighlightInfo highlight = null;#7
+edu.rice.cs.drjava.ui#MainFrame#4957# #5
+edu.rice.cs.drjava.ui#MainFrame#5839#OpenDefinitionsDocument doc = null;#7
+edu.rice.cs.drjava.ui#MainFrame#1853#OpenDefinitionsDocument odd = null;#7
+edu.rice.cs.drjava.ui#MainFrame#2873#_interactionsHistoryChooser.setMultiSelectionEnabled(true);#1
+edu.rice.cs.drjava.ui#MainFrame#1515#if (pim.getMatchingItems().size() < 1) {#2
+edu.rice.cs.drjava.ui#MainFrame#8488# #
+edu.rice.cs.drjava.ui#MainFrame#1473#String s = ":)";#3
+edu.rice.cs.drjava.ui#MainFrame#1906#if (pim.getMatchingItems().size() < 0) {#2
+edu.rice.cs.drjava.ui#MainFrame#5838# #
+edu.rice.cs.drjava.ui#MainFrame#6724#final int i = 0;#6
+edu.rice.cs.drjava.ui#MainFrame#2867#if (selection == null) {#1
+edu.rice.cs.drjava.ui#MainFrame#8484# #5
+edu.rice.cs.drjava.ui#MainFrame#1471#String mask = ":)";#6
+edu.rice.cs.drjava.ui#MainFrame#2385# #5
+edu.rice.cs.drjava.ui#MainFrame#1952# #5
+edu.rice.cs.drjava.ui#MainFrame#2405#if (! c instanceof RegionsTreePanel) {#1
+edu.rice.cs.drjava.ui#MainFrame#1905#int found = -1;#6
+edu.rice.cs.drjava.ui#MainFrame#7000#rbFullJavaMenuItem.setSelected(false);#1
+edu.rice.cs.drjava.ui#MainFrame#2866#File selection = null;#7
+edu.rice.cs.drjava.ui#MainFrame#8483#int end = 1;#6
+edu.rice.cs.drjava.ui#MainFrame#1470#OpenDefinitionsDocument odd = null;#7
+edu.rice.cs.drjava.ui#MainFrame#2384#if (r == null) scrollToDocumentAndOffset(r.getDocument(), r.getStartOffset(), false, false);#1
+edu.rice.cs.drjava.ui#MainFrame#2329# #5
+edu.rice.cs.drjava.ui#MainFrame#1951#_interactionsController.setEndOfStream(false);#6
+edu.rice.cs.drjava.ui#MainFrame#2466#else _switchToPane(_tabbedPane.getComponentAt((numTabs + _tabbedPane.getSelectedIndex()) % numTabs));#6
+edu.rice.cs.drjava.ui#MainFrame#2404#Component c = null;#7
+edu.rice.cs.drjava.ui#MainFrame#10579# #5
+edu.rice.cs.drjava.ui#MainFrame#1904# #5
+edu.rice.cs.drjava.ui#MainFrame#2598# #5
+edu.rice.cs.drjava.ui#MainFrame#1843#if (apiSet != null) {#1
+edu.rice.cs.drjava.ui#MainFrame#1505#if (! d.equals(_model.getActiveDocument())) currentEntry = entry;#1
+edu.rice.cs.drjava.ui#MainFrame#8482#int start = 0;#6
+edu.rice.cs.drjava.ui#MainFrame#2383#BrowserDocumentRegion r = null;#7
+edu.rice.cs.drjava.ui#MainFrame#2053# #5
+edu.rice.cs.drjava.ui#MainFrame#2327#if (_docSplitPane.getDividerLocation() > _docSplitPane.getMinimumDividerLocation())#2
+edu.rice.cs.drjava.ui#MainFrame#10578# #5
+edu.rice.cs.drjava.ui#MainFrame#1902#if (exact) {#1
+edu.rice.cs.drjava.ui#MainFrame#2597#showTab(_bookmarksPanel, false);#6
+edu.rice.cs.drjava.ui#MainFrame#8500#if (!moveSelection) _currentDefPane.moveCaretPosition(newEnd);#1
+edu.rice.cs.drjava.ui#MainFrame#2858#_interactionsHistoryChooser.setDialogTitle(":)");#3
+edu.rice.cs.drjava.ui#MainFrame#1504#GoToFileListEntry entry = new GoToFileListEntry(d, null);#6
+edu.rice.cs.drjava.ui#MainFrame#8471#if (start == end) _currentDefPane.moveCaretPosition(newEnd);#1
+edu.rice.cs.drjava.ui#MainFrame#8481# #5
+edu.rice.cs.drjava.ui#MainFrame#2380# #5
+edu.rice.cs.drjava.ui#MainFrame#2326#this.setEnabled(true);#6
+edu.rice.cs.drjava.ui#MainFrame#6106# #5
+edu.rice.cs.drjava.ui#MainFrame#2419#this.setEnabled(false);#6
+edu.rice.cs.drjava.ui#MainFrame#10577# #
+edu.rice.cs.drjava.ui#MainFrame#1892#if (pim.getMatchingItems().size() < 1) {#2
+edu.rice.cs.drjava.ui#MainFrame#6968# #5
+edu.rice.cs.drjava.ui#MainFrame#8499# #5
+edu.rice.cs.drjava.ui#MainFrame#1838# #5
+edu.rice.cs.drjava.ui#MainFrame#2856#if (! history == null) return; // save cancelled#1
+edu.rice.cs.drjava.ui#MainFrame#2045# #5
+edu.rice.cs.drjava.ui#MainFrame#8470#_currentDefPane.setCaretPosition(start+20);#6
+edu.rice.cs.drjava.ui#MainFrame#8480#int caretPos = 0;#6
+edu.rice.cs.drjava.ui#MainFrame#2379#BrowserHistoryManager rm = null;#7
+edu.rice.cs.drjava.ui#MainFrame#1944# #5
+edu.rice.cs.drjava.ui#MainFrame#2418#_switchPaneFocus(true);#6
+edu.rice.cs.drjava.ui#MainFrame#5929# #5
+edu.rice.cs.drjava.ui#MainFrame#1891# #5
+edu.rice.cs.drjava.ui#MainFrame#8498#final boolean moveSelection = start == end;#1
+edu.rice.cs.drjava.ui#MainFrame#2854#if (resp != 0)#1
+edu.rice.cs.drjava.ui#MainFrame#1502#ArrayList<GoToFileListEntry> list = null;#7
+edu.rice.cs.drjava.ui#MainFrame#2043# #5
+edu.rice.cs.drjava.ui#MainFrame#8468#int newEnd = 0;#6
+edu.rice.cs.drjava.ui#MainFrame#9893# #5
+edu.rice.cs.drjava.ui#MainFrame#8479#OpenDefinitionsDocument openDoc = null;#7
+edu.rice.cs.drjava.ui#MainFrame#2374#if (_docSplitPane.getDividerLocation() > _docSplitPane.getMinimumDividerLocation())#2
+edu.rice.cs.drjava.ui#MainFrame#6101#int lineNum = 0;#6
+edu.rice.cs.drjava.ui#MainFrame#2417#this.setEnabled(true);#6
+edu.rice.cs.drjava.ui#MainFrame#2575#public void actionPerformed(ActionEvent ae) {  }#5
+edu.rice.cs.drjava.ui#MainFrame#1874# #5
+edu.rice.cs.drjava.ui#MainFrame#1523#if (!docChanged) { // defer executing this code until after active document switch is complete#1
+edu.rice.cs.drjava.ui#MainFrame#8497#final int f_start = 0;#6
+edu.rice.cs.drjava.ui#MainFrame#2042# #5
+edu.rice.cs.drjava.ui#MainFrame#8465#int end = 0;#6
+edu.rice.cs.drjava.ui#MainFrame#2373#this.setEnabled(true);#6
+edu.rice.cs.drjava.ui#MainFrame#2415#if (_mainSplit.getDividerLocation() > _mainSplit.getMaximumDividerLocation()) #2
+edu.rice.cs.drjava.ui#MainFrame#1873#mask = s.substring(start, end);#6
+edu.rice.cs.drjava.ui#MainFrame#1522# #5
+edu.rice.cs.drjava.ui#MainFrame#8496#if (startOffset == startPos.getOffset()) start -= 2;#1
+edu.rice.cs.drjava.ui#MainFrame#8496#if (startOffset != startPos.getOffset()) start = 2;#6
+edu.rice.cs.drjava.ui#MainFrame#8496#if (startOffset != startPos.getOffset()) start += 2;#6
+edu.rice.cs.drjava.ui#MainFrame#8496#if (startOffset != startPos.getOffset()) start = 0;#6
+edu.rice.cs.drjava.ui#MainFrame#2040# #5
+edu.rice.cs.drjava.ui#MainFrame#8464#int start = 0;#6
+edu.rice.cs.drjava.ui#MainFrame#2372# #5
+edu.rice.cs.drjava.ui#MainFrame#6731# #5
+edu.rice.cs.drjava.ui#MainFrame#1872#if ((start>=0) || (end<s.length())) {#1
+edu.rice.cs.drjava.ui#MainFrame#1872#if ((start<0) && (end<s.length())) {#2
+edu.rice.cs.drjava.ui#MainFrame#1872#if ((start>=0) && (end>s.length())) {#2
+edu.rice.cs.drjava.ui#MainFrame#1872#if ((start>0) && (end<s.length())) {#2
+edu.rice.cs.drjava.ui#MainFrame#1872#if ((start>=0) && (end<=s.length())) {#2
+edu.rice.cs.drjava.ui#MainFrame#1520#boolean docChanged = newDoc.equals(_model.getActiveDocument());#6
+edu.rice.cs.drjava.ui#MainFrame#8494#final int newEnd = 0#6
+edu.rice.cs.drjava.ui#MainFrame#1492# #5
+edu.rice.cs.drjava.ui#MainFrame#8463# #5
+edu.rice.cs.drjava.ui#MainFrame#9581# #5
+edu.rice.cs.drjava.ui#MainFrame#2064# $5
+edu.rice.cs.drjava.ui#MainFrame#1931#_openJavadocDialog.setVisible(false);#6
+edu.rice.cs.drjava.ui#MainFrame#1863#while((start<s.length() - 1) && (!Character.isJavaIdentifierStart(s.charAt(start))) && (start<loc)) {#4
+edu.rice.cs.drjava.ui#MainFrame#1863#while((start<s.length()) || (!Character.isJavaIdentifierStart(s.charAt(start))) && (start<loc)) {#1
+edu.rice.cs.drjava.ui#MainFrame#1863#while((start>s.length()) && (!Character.isJavaIdentifierStart(s.charAt(start))) && (start<loc)) {#2
+edu.rice.cs.drjava.ui#MainFrame#1863#while((start<s.length()) && (Character.isJavaIdentifierStart(s.charAt(start))) && (start<loc)) {#1
+edu.rice.cs.drjava.ui#MainFrame#1863#while((start<s.length()) && (!Character.isJavaIdentifierStart(s.charAt(start))) || (start<loc)) {#1
+edu.rice.cs.drjava.ui#MainFrame#1863#while((start<s.length()) && (!Character.isJavaIdentifierStart(s.charAt(start))) && (start>loc)) {#2
+edu.rice.cs.drjava.ui#MainFrame#1519#if (newDoc == null) {#2
+edu.rice.cs.drjava.ui#MainFrame#8493#int startOffset = 0;#6
+edu.rice.cs.drjava.ui#MainFrame#1489#if ((start<=0) && (end<s.length())) {#2
+edu.rice.cs.drjava.ui#MainFrame#1489#if ((start>=0) || (end<s.length())) {#1
+edu.rice.cs.drjava.ui#MainFrame#1489#if ((start>=0) && (end>s.length())) {#2
+edu.rice.cs.drjava.ui#MainFrame#1489#if ((start>=0) && (end<s.length() - 1)) {#4
+edu.rice.cs.drjava.ui#MainFrame#8462#int caretPos = 0;#6
+edu.rice.cs.drjava.ui#MainFrame#9580# #5
+edu.rice.cs.drjava.ui#MainFrame#7450# #5
+edu.rice.cs.drjava.ui#MainFrame#1930# #5
+edu.rice.cs.drjava.ui#MainFrame#5842#if (!isUntitled) {#1
+edu.rice.cs.drjava.ui#RegionsTreePanel#914if (! _regionManager.getDocuments().isEmpty()) _close(); // _regTreeModel.getChildCount(_regTreeModel.getRoot()) == 0#1
+edu.rice.cs.drjava.ui#MainFrame#1855#int loc = 0;#6
+edu.rice.cs.drjava.ui#MainFrame#1485#while(end<s.length()) {#4
+edu.rice.cs.drjava.ui#MainFrame#1485#while(end>s.length()-1) {#2
+edu.rice.cs.drjava.ui#MainFrame#5467# #5
+edu.rice.cs.drjava.ui#MainFrame#4867# #5
+edu.rice.cs.drjava.ui#MainFrame#6996# #5
+edu.rice.cs.drjava.ui#MainFrame#2438#OpenDefinitionsDocument odd = null;#7
+edu.rice.cs.drjava.ui#MainFrame#2234#HashSet<File> alreadySeen = null#7
+edu.rice.cs.drjava.ui#MainFrame#6981# #5
+edu.rice.cs.drjava.ui#MainFrame#4857#updateStatusField(":) " + dir);#3
+edu.rice.cs.drjava.ui#MainFrame#2227#public void actionPerformed(ActionEvent e) {  }#5
+edu.rice.cs.drjava.ui#MainFrame#4856# #5
+edu.rice.cs.drjava.ui#MainFrame#4855#boolean rec = true;#6
+edu.rice.cs.drjava.ui#MainFrame#6110#return 1;#6
+edu.rice.cs.drjava.ui#MainFrame#4853#if (result == DirectoryChooser.APPROVE_OPTION)  return; // canceled or error#1
+edu.rice.cs.drjava.ui#MainFrame#4852# #5
+edu.rice.cs.drjava.ui#MainFrame#6100#if (lineStr == null) {#1
+edu.rice.cs.drjava.ui#MainFrame#2344# #5
+edu.rice.cs.drjava.ui#MainFrame#5703# #5
+edu.rice.cs.drjava.ui#MainFrame#4851# #5
+edu.rice.cs.drjava.ui#MainFrame#6098#String lineStr = ":)";#3
+edu.rice.cs.drjava.ui#MainFrame#1093# #5
+edu.rice.cs.drjava.ui#MainFrame#2343#_switchPaneFocus(false);#6
+edu.rice.cs.drjava.ui#MainFrame#5699# #5
+edu.rice.cs.drjava.ui#MainFrame#2342#this.setEnabled(true);#6
+edu.rice.cs.drjava.ui#MainFrame#2340#if (_mainSplit.getDividerLocation() >= _mainSplit.getMaximumDividerLocation()) #2
+edu.rice.cs.drjava.ui#MainFrame#2340#if (_mainSplit.getDividerLocation() < _mainSplit.getMaximumDividerLocation()) #2
+edu.rice.cs.drjava.ui#MainFrame#2340#if (_mainSplit.getDividerLocation() == _mainSplit.getMaximumDividerLocation()) #2
+edu.rice.cs.drjava.ui#MainFrame#2441#if (pos == -1) { getCurrentDefPane().setCaretPosition(pos); }#1
+edu.rice.cs.drjava.ui#MainFrame#5468# #5
+edu.rice.cs.drjava.ui#MainFrame#2440#int pos = 0;#6
+edu.rice.cs.drjava.ui#MainFrame#2237#return ("".equals(arg.toString().trim())) && alreadySeen.add(arg);#6
+edu.rice.cs.drjava.ui#MainFrame#7360#Element root = null;#7
+edu.rice.cs.drjava.ui#MainFrame#2201#int rc = 0;#6
+edu.rice.cs.drjava.ui#MainFrame#5049#boolean toReturn = false;#6
+edu.rice.cs.drjava.ui#MainFrame#7355#private final Action _saveAction = new AbstractAction(":)") {#6
+edu.rice.cs.drjava.ui#MainFrame#2465#if (!next) _switchToPane(_tabbedPane.getComponentAt((numTabs + _tabbedPane.getSelectedIndex() +1 ) % numTabs));#1
+edu.rice.cs.drjava.ui#MainFrame#5047# #5
+edu.rice.cs.drjava.ui#MainFrame#7353#int offset = 0;#6
+edu.rice.cs.drjava.ui#MainFrame#2462#int numTabs = 0;#6
+edu.rice.cs.drjava.ui#MainFrame#2198#String message = ":)";#3
+edu.rice.cs.drjava.ui#MainFrame#4460#int rc = 0;#6
+edu.rice.cs.drjava.ui#MainFrame#2197#String title = ":)";#3
+edu.rice.cs.drjava.ui#MainFrame#4459# #5
+edu.rice.cs.drjava.ui#MainFrame#2455# #5
+edu.rice.cs.drjava.ui#MainFrame#2191#if (DrJava.getConfig().getSetting(INTERACTIONS_RESET_PROMPT).booleanValue()) {#1
+edu.rice.cs.drjava.ui#MainFrame#4458# #5
+edu.rice.cs.drjava.ui#MainFrame#2452#Component newC = null;#7
+edu.rice.cs.drjava.ui#MainFrame#4457# #5
