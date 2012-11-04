@@ -148,7 +148,7 @@ edu.rice.cs.drjava.ui#MainFrame#9580# #5
 edu.rice.cs.drjava.ui#MainFrame#7450# #5
 edu.rice.cs.drjava.ui#MainFrame#1930# #5
 edu.rice.cs.drjava.ui#MainFrame#5842#if (!isUntitled) {#1
-edu.rice.cs.drjava.ui#RegionsTreePanel#914if (! _regionManager.getDocuments().isEmpty()) _close(); // _regTreeModel.getChildCount(_regTreeModel.getRoot()) == 0#1
+edu.rice.cs.drjava.ui#RegionsTreePanel#914#if (! _regionManager.getDocuments().isEmpty()) _close(); // _regTreeModel.getChildCount(_regTreeModel.getRoot()) == 0#1
 edu.rice.cs.drjava.ui#MainFrame#1855#int loc = 0;#6
 edu.rice.cs.drjava.ui#MainFrame#1485#while(end<s.length()) {#4
 edu.rice.cs.drjava.ui#MainFrame#1485#while(end>s.length()-1) {#2
