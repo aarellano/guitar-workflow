@@ -66,7 +66,7 @@ end
 def get_relevant_testcases(table_postfix, package, class_name, line)
   dbh = get_dbh
   return dbh.query "SELECT tc_name FROM testcases_#{table_postfix} WHERE
-  id IN (SELECT id FROM coverage_#{table_postfix} WHERE
+  id IN (SELECT tc_id FROM coverage_#{table_postfix} WHERE
     package_id =  (SELECT id FROM packages_#{table_postfix} WHERE package_name = '#{package}')
     AND class_id = (SELECT id FROM classes_#{table_postfix} WHERE class_name = '#{class_name}')
     AND line = #{line})"
