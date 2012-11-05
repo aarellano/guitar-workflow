@@ -28,7 +28,7 @@ opts = Trollop::options do
 	opt :manual, "With this option the AUT can be run manually, without automated tests"
 	opt :faults, "This flag enable the fault matrix generation", default: false
 	opt :faults_file, "This file should have all the faults", type: :string
-	opt :table_postfix, "This option is used to specify a custom coverage and faults tables' postfix. The postfix used by default is the current time. This option overwrites dev mode -dev", type: :string
+	opt :instance, "This option is used to specify a custom instance name, used for coverage and faults tables and persistent directories when --no-dev is set. The postfix used by default is the current time.", type: :string
 	opt :workspace, "This is the path to be used as the workspace. It overrides the environment var WORKSPACE used by Jenkins", type: :string
 end
 
@@ -48,7 +48,7 @@ guitar_root = "#{workspace}/guitar"
 guitar_build_file = "#{guitar_root}/build.xml"
 guitar_jfc = "#{guitar_root}/dist/guitar"
 guitar_jfc_lib = "#{guitar_jfc}/jars"
-output_dir = "#{workspace}/output"
+output_dir = opts.dev ? "#{workspace}/output" : (opts.instance ? "#{workspace}/output_#{opts.instance}" : ("#{workspace}/output_#{Time.now.strftime("%Y%m%d%H%M%S")}"))
 gui_file = "#{output_dir}/DrJava.GUI"
 efg_file = "#{output_dir}/DrJava.EFG"
 log_file = "#{output_dir}/DrJava.log"
@@ -67,7 +67,7 @@ faulty_logs = "#{faulty_output}/logs"
 faulty_states = "#{faulty_output}/states"
 
 ENV['JAVA7_HOME'] = `uname -a | grep i386` != "" ? '/usr/lib/jvm/java-7-openjdk-i386' : '/usr/lib/jvm/java-7-openjdk-amd64'
-table_postfix = opts.table_postfix ? opts.table_postfix : (opts.dev ? "devmode" : "#{Time.now.strftime("%Y%m%d%H%M%S")}")
+table_postfix = opts.instance ? opts.instance : (opts.dev ? "devmode" : "#{Time.now.strftime("%Y%m%d%H%M%S")}")
 
 if ! File.directory? guitar_root
 	puts 'Checking out GUITAR source'
@@ -132,14 +132,17 @@ if opts.rip
 end
 
 if opts.wtc >= 0
-	puts "Generating test cases to cover #{opts.wtc} #{tc_length}-way event interactions"
-	`rm -rf #{testcases_dir}/*`
+	puts "Generating test cases to cover #{opts.wtc == 0 ? 'all' : opts.wtc} #{tc_length}-way event interactions"
 	`java #{guitar_opts} -cp #{classpath} edu.umd.cs.guitar.testcase.TestCaseGenerator -p RandomSequenceLengthCoverage -e #{efg_file} -l #{tc_length} -m #{opts.wtc} -d #{testcases_dir}`
 end
 
 if opts.replays >= 0
 	puts "Replaying test cases"
 	create_coverage_table(table_postfix)
+	FileUtils.mkdir_p output_dir
+	FileUtils.mkdir_p states_dir
+	FileUtils.mkdir_p logs_dir
+	FileUtils.mkdir_p testcases_dir
 	total = `ls -l #{testcases_dir} | wc -l`.to_i
 	testcase_num = opts.replays == 0 ? total : opts.replays
 	ETR.start testcase_num
@@ -194,15 +197,21 @@ if opts.faults
 		split_line = line.split '#'
 		faulty_file = "#{faulty_root}/src/#{split_line[0].gsub('.', '/')}/#{split_line[1]}.java"
 		test_cases = get_relevant_testcases(table_postfix, split_line[0], split_line[0] + '.' + split_line[1], split_line[2])
-		puts "There are #{test_cases.num_rows} relevant test cases for this fault"
+		puts "There #{test_cases.num_rows == 1 ? 'is' : 'are'} #{test_cases.num_rows} relevant test cases for this fault"
+		next if test_cases.num_rows == 0
 
 		FileUtils.cp faulty_file, faulty_file + '.bkp'
-		`sed -i '#{split_line[2]}c#{split_line[3]}' #{faulty_file}`
+		if split_line[4].chop == "5" # Then removes the entire line
+			`sed -i '#{split_line[2]}d' #{faulty_file}`
+		else
+			`sed -i '#{split_line[2]}c #{split_line[3]}' #{faulty_file}`
 
 		FileUtils.rm_rf "#{faulty_root}/drjava.jar"
 		FileUtils.rm_rf "#{faulty_root}/classes"
-		`ant jar -f #{faulty_root}/build.xml`
+		puts "Building faulty version"
+		ant_jar = `ant jar -f #{faulty_root}/build.xml 2>&1 | grep 'BUILD FAILED'`
 		FileUtils.cp faulty_file + '.bkp', faulty_file
+		next if ant_jar != ""
 		test_cases.each_hash do |row|
 			puts "Running test case #{row['tc_name']}"
 			guitar_opts="-Dlog4j.configuration=log/guitar-clean.glc -Dnet.sourceforge.cobertura.datafile=cobertura.ser"
@@ -227,9 +236,10 @@ if opts.faults
 				f.close
 			end
 			`sed 's/^[ \t]*//;s/[ \t]*$//;/^$/d' faulty_state_word_sorted > faulty_state`
-			`sort faulty_state > faulty_stateste`
+			`sort faulty_state > faulty_state`
 
 			detection = `diff state faulty_state` != "" ? true : false
+			puts "Writing results"
 			write_fault(row['tc_name'], f_n + 1, detection, split_line[4], table_postfix)
 
 			`rm state state_word_sorted faulty_state faulty_state_word_sorted`
