@@ -78,3 +78,9 @@ def write_fault(testcase, fault_number, detection, fault_type, table_postfix)
   dbh.query "INSERT INTO faults_#{table_postfix} (fault, tc_id, detection, fault_type) VALUES (#{fault_number}, #{tc_id}, #{detection}, #{fault_type})"
   dbh.close if dbh
 end
+
+def clean(table_postfix)
+  dbh = get_dbh
+  dbh.query "DROP TABLE IF EXISTS faults_#{table_postfix}, coverage_#{table_postfix}, classes_#{table_postfix}, packages_#{table_postfix}, testcases_#{table_postfix}"
+  dbh.close if dbh
+end

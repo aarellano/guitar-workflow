@@ -30,6 +30,7 @@ opts = Trollop::options do
 	opt :faults_file, "This file should have all the faults", type: :string
 	opt :instance, "This option is used to specify a custom instance name, used for coverage and faults tables and persistent directories when --no-dev is set. The postfix used by default is the current time.", type: :string
 	opt :workspace, "This is the path to be used as the workspace. It overrides the environment var WORKSPACE used by Jenkins", type: :string
+	opt :clean, "When this option is enabled, the directories and tables associated with the current instance are deleted"
 end
 
 workspace = opts.workspace ? opts.workspace : (ENV['WORKSPACE'] ? ENV['WORKSPACE'] : Dir.pwd)
@@ -205,6 +206,7 @@ if opts.faults
 			`sed -i '#{split_line[2]}d' #{faulty_file}`
 		else
 			`sed -i '#{split_line[2]}c #{split_line[3]}' #{faulty_file}`
+		end
 
 		FileUtils.rm_rf "#{faulty_root}/drjava.jar"
 		FileUtils.rm_rf "#{faulty_root}/classes"
@@ -221,18 +223,18 @@ if opts.faults
 			`#{run_cmd}`
 
 			`sed 's/^[ \t]*//;s/[ \t]*$//;/milliseconds/d;/^$/d' #{states_dir}/#{row['tc_name']}.sta > 'state'`
-			IO.readlines('state').each do |line|
+			IO.readlines('state').each do |st_line|
 				f = open('state_word_sorted','a')
-				f.puts line.chars.sort.join
+				f.puts st_line.chars.sort.join
 				f.close
 			end
 			`sed 's/^[ \t]*//;s/[ \t]*$//;/^$/d' state_word_sorted > state`
 			`sort state > state`
 
 			`sed 's/^[ \t]*//;s/[ \t]*$//;/milliseconds/d;/^$/d' #{faulty_states}/#{row['tc_name']}.sta > faulty_state`
-			IO.readlines('faulty_state').each do |line|
+			IO.readlines('faulty_state').each do |f_line|
 				f = open('faulty_state_word_sorted','a')
-				f.puts line.chars.sort.join
+				f.puts f_line.chars.sort.join
 				f.close
 			end
 			`sed 's/^[ \t]*//;s/[ \t]*$//;/^$/d' faulty_state_word_sorted > faulty_state`
@@ -246,4 +248,12 @@ if opts.faults
 		end
 	end
 	puts "FINISHED. TOTAL TIME SEEDING FAULTS: #{(ETR.finish / 3600).round 2} hours"
+end
+
+if opts.clean
+	puts "Are you sure? [y/n]"
+	if gets.chop == "y"
+		FileUtils.rm_rf output_dir
+		clean table_postfix
+	end
 end
