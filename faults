@@ -1,3 +1,4 @@
+edu.rice.cs.drjava.ui#MainFrame#2903# #5
 edu.rice.cs.drjava.model#AbstractDJDocument#1605#String line = "";#3
 edu.rice.cs.drjava.model#AbstractDJDocument#1589#int pos = prefixSize;#6
 edu.rice.cs.drjava.model#AbstractDJDocument#1583#int prefixSize = _currentLocation;#6
@@ -20,7 +21,6 @@ edu.rice.cs.drjava.ui#GenerateCustomDrJavaJarFrame#687# #5
 edu.rice.cs.drjava.ui#MainFrame#8461#OpenDefinitionsDocument openDoc = null;#9
 edu.rice.cs.drjava.ui#MainFrame#9577# #5
 edu.rice.cs.drjava.ui#MainFrame#7449#if (highlight == null) highlight.remove();#3
-edu.rice.cs.drjava.ui#MainFrame#2903# #
 edu.rice.cs.drjava.ui#MainFrame#1929# #5
 edu.rice.cs.drjava.ui#MainFrame#5841#boolean isUntitled = ! doc.isUntitled();#6
 edu.rice.cs.drjava.ui#MainFrame#1854#String mask = ":)";#6
@@ -35,10 +35,10 @@ edu.rice.cs.drjava.ui#MainFrame#5839#OpenDefinitionsDocument doc = null;#7
 edu.rice.cs.drjava.ui#MainFrame#1853#OpenDefinitionsDocument odd = null;#7
 edu.rice.cs.drjava.ui#MainFrame#2873#_interactionsHistoryChooser.setMultiSelectionEnabled(true);#1
 edu.rice.cs.drjava.ui#MainFrame#1515#if (pim.getMatchingItems().size() < 1) {#2
-edu.rice.cs.drjava.ui#MainFrame#8488# #
+edu.rice.cs.drjava.ui#MainFrame#8488# #5
 edu.rice.cs.drjava.ui#MainFrame#1473#String s = ":)";#3
 edu.rice.cs.drjava.ui#MainFrame#1906#if (pim.getMatchingItems().size() < 0) {#2
-edu.rice.cs.drjava.ui#MainFrame#5838# #
+edu.rice.cs.drjava.ui#MainFrame#5838# #5
 edu.rice.cs.drjava.ui#MainFrame#6724#final int i = 0;#6
 edu.rice.cs.drjava.ui#MainFrame#2867#if (selection == null) {#1
 edu.rice.cs.drjava.ui#MainFrame#8484# #5
@@ -77,7 +77,7 @@ edu.rice.cs.drjava.ui#MainFrame#2380# #5
 edu.rice.cs.drjava.ui#MainFrame#2326#this.setEnabled(true);#6
 edu.rice.cs.drjava.ui#MainFrame#6106# #5
 edu.rice.cs.drjava.ui#MainFrame#2419#this.setEnabled(false);#6
-edu.rice.cs.drjava.ui#MainFrame#10577# #
+edu.rice.cs.drjava.ui#MainFrame#10577# #5
 edu.rice.cs.drjava.ui#MainFrame#1892#if (pim.getMatchingItems().size() < 1) {#2
 edu.rice.cs.drjava.ui#MainFrame#6968# #5
 edu.rice.cs.drjava.ui#MainFrame#8499# #5
