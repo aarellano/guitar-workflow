@@ -163,7 +163,7 @@ if opts.replays >= 0
 
 		if resume
 			if testcase_already_run? table_postfix, test_name
-				puts "Test case number #{testcase_n + 1} #{test_name} already run, skipping"
+				puts "Test case number #{tc_n + 1} #{test_name} already run, skipping"
 				next
 			end
 		end
