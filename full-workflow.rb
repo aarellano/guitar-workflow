@@ -247,7 +247,7 @@ if opts.faults
 				f.close
 			end
 			`sed 's/^[ \t]*//;s/[ \t]*$//;/^$/d' state_word_sorted > state`
-			`sort state > state`
+			`sort state -o state`
 
 			`sed 's/^[ \t]*//;s/[ \t]*$//;/milliseconds/d;/^$/d' #{faulty_states}/#{row['tc_name']}.sta > faulty_state`
 			IO.readlines('faulty_state').each do |f_line|
@@ -256,7 +256,7 @@ if opts.faults
 				f.close
 			end
 			`sed 's/^[ \t]*//;s/[ \t]*$//;/^$/d' faulty_state_word_sorted > faulty_state`
-			`sort faulty_state > faulty_state`
+			`sort faulty_state -o faulty_state`
 
 			detection = `diff state faulty_state` != "" ? true : false
 			puts "Writing results"
