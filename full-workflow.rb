@@ -49,7 +49,7 @@ guitar_root = "#{workspace}/guitar"
 guitar_build_file = "#{guitar_root}/build.xml"
 guitar_jfc = "#{guitar_root}/dist/guitar"
 guitar_jfc_lib = "#{guitar_jfc}/jars"
-output_dir = opts.dev ? "#{workspace}/output" : (opts.instance ? "#{workspace}/output_#{opts.instance}" : ("#{workspace}/output_#{Time.now.strftime("%Y%m%d%H%M%S")}"))
+output_dir = opts.instance ? "#{workspace}/output_#{opts.instance}" : (opts.dev ? "#{workspace}/output" : ("#{workspace}/output_#{Time.now.strftime("%Y%m%d%H%M%S")}"))
 gui_file = "#{output_dir}/DrJava.GUI"
 efg_file = "#{output_dir}/DrJava.EFG"
 log_file = "#{output_dir}/DrJava.log"
@@ -63,7 +63,7 @@ intial_wait = 2000
 
 faulty_world = "#{workspace}/faulty_world"
 faulty_root = "#{faulty_world}/#{aut_name}"
-faulty_output = "#{faulty_world}/output"
+faulty_output = opts.instance ? "#{faulty_world}/output_#{opts.instance}" : (opts.dev ? "#{faulty_world}/output" : ("#{faulty_world}/output_#{Time.now.strftime("%Y%m%d%H%M%S")}"))
 faulty_logs = "#{faulty_output}/logs"
 faulty_states = "#{faulty_output}/states"
 
