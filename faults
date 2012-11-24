@@ -129,7 +129,7 @@ edu.rice.cs.drjava.ui#MainFrame#8494#final int newEnd = 0#6
 edu.rice.cs.drjava.ui#MainFrame#1492# #5
 edu.rice.cs.drjava.ui#MainFrame#8463# #5
 edu.rice.cs.drjava.ui#MainFrame#9581# #5
-edu.rice.cs.drjava.ui#MainFrame#2064# $5
+edu.rice.cs.drjava.ui#MainFrame#2064# #5
 edu.rice.cs.drjava.ui#MainFrame#1931#_openJavadocDialog.setVisible(false);#6
 edu.rice.cs.drjava.ui#MainFrame#1863#while((start<s.length() - 1) && (!Character.isJavaIdentifierStart(s.charAt(start))) && (start<loc)) {#4
 edu.rice.cs.drjava.ui#MainFrame#1863#while((start<s.length()) || (!Character.isJavaIdentifierStart(s.charAt(start))) && (start<loc)) {#1
