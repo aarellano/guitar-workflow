@@ -139,7 +139,18 @@ end
 
 if opts.replays >= 0
 	puts "Replaying test cases"
-	create_coverage_table(table_postfix)
+	if ! opts.dev || opts.instance
+		puts "Trying to resume from previous process: #{table_postfix}"
+		if postfix_used? table_postfix
+			puts "Previous process with same instance name found. If you want to start it from scratch, use the --clean option before running again"
+			resume = true
+		else
+			puts "No previous process with same instance name found (or it was empty). Creating a new set of tables"
+			resume = false
+			create_coverage_table(table_postfix)
+		end
+	end
+
 	FileUtils.mkdir_p output_dir
 	FileUtils.mkdir_p states_dir
 	FileUtils.mkdir_p logs_dir
@@ -147,14 +158,21 @@ if opts.replays >= 0
 	total = `ls -l #{testcases_dir} | wc -l`.to_i
 	testcase_num = opts.replays == 0 ? total : opts.replays
 	ETR.start testcase_num
-
 	Dir[testcases_dir + '/*.tst'].first(testcase_num).each_with_index do |tc, tc_n|
+		test_name = File.basename(tc, '.*')
+
+		if resume
+			if testcase_already_run? table_postfix, test_name
+				puts "Test case number #{testcase_n + 1} #{test_name} already run, skipping"
+				next
+			end
+		end
+
 		puts "Running test case #{tc_n + 1}. Estimated time remaining: #{(ETR.run / 3600).round 2} hours "
 
 		FileUtils.rm "#{workspace}/cobertura.ser"
 		FileUtils.cp "#{workspace}/cobertura.ser.bkp", "cobertura.ser"
 
-		test_name = File.basename(tc, '.*')
 		guitar_opts="-Dlog4j.configuration=log/guitar-clean.glc -Dnet.sourceforge.cobertura.datafile=cobertura.ser"
 		guitar_args = "-c #{aut_mainclass} -g #{gui_file} -e #{efg_file} -t #{tc} -i #{intial_wait} -d #{relayer_delay} -l #{logs_dir}/#{test_name}.log -gs #{states_dir}/#{test_name}.sta -cf #{aut_config}"
 		replay_cmd = "java #{guitar_opts} -cp #{classpath} edu.umd.cs.guitar.replayer.JFCReplayerMain #{guitar_args}"

@@ -21,6 +21,24 @@ def create_faults_table(table_postfix)
   dbh.close if dbh
 end
 
+def postfix_used?(table_postfix)
+  begin
+    dbh = get_dbh
+    dbh.query("SELECT * FROM coverage_#{table_postfix} LIMIT 1").num_rows == 1 ? true : false
+  rescue MysqlError
+    false
+  end
+end
+
+def testcase_already_run?(table_postfix, test_name)
+  begin
+    dbh = get_dbh
+    dbh.query("SELECT * FROM testcases_#{table_postfix} WHERE tc_name = '#{test_name}'").num_rows == 1 ? true : false
+  rescue MysqlError
+    false
+  end
+end
+
 def write_coverage(testcase, xml_file, table_postfix)
   dbh = get_dbh
   dbh.query("INSERT IGNORE INTO testcases_#{table_postfix} (tc_name) VALUES ('#{testcase}')")
